@@ -37,7 +37,7 @@
             --border-color: #dcdace;
         }
 
-        /* ---------------- 헤더 영역 (너비 제한 적용) ---------------- */
+        /* ---------------- 헤더 영역 ---------------- */
         header { 
             position: sticky; top: 0; z-index: 1000; background-color: #f6f5ef; 
             border-bottom: 1px solid transparent; transition: border-bottom 0.3s ease;
@@ -110,8 +110,11 @@
         .tools-list { display: flex; flex-wrap: wrap; gap: 0.8rem; }
         .tool-chip { background-color: transparent; border: 1px solid var(--border-color); padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
         
-        .contact-list p { margin-bottom: 0.5rem; font-size: 1.1rem; color: #222; }
-        .contact-icon { display: inline-block; width: 30px; }
+        .contact-list p { margin-bottom: 1rem; font-size: 1.1rem; }
+        .contact-link { text-decoration: none; color: #222; transition: color 0.2s ease; display: inline-flex; align-items: center; }
+        .contact-link:hover { color: var(--brand-color); }
+        .contact-icon { display: inline-block; width: 35px; font-size: 1.3rem; }
+        .contact-hint { font-size: 0.85rem; color: #888; margin-left: 0.5rem; }
 
         /* ================= 프로젝트 모달(팝업) 창 및 네비게이션 ================= */
         .modal-overlay {
@@ -173,9 +176,9 @@
             .portfolio-grid { grid-template-columns: 1fr; padding-top: 1rem; }
             .cv-name { font-size: 2.5rem; }
             
-            .modal-container { flex-direction: column; padding: 4rem 1.5rem; gap: 2rem; }
-            .modal-sidebar { position: relative; top: 0; flex: none; width: 100%; }
-            .modal-nav { flex-direction: row; flex-wrap: wrap; gap: 1rem; } 
+            /* 모달창 모바일 최적화 (네비게이션 숨김) */
+            .modal-container { flex-direction: column; padding: 4rem 1.5rem; gap: 0; }
+            .modal-sidebar { display: none; } /* 모바일에서 인덱스 숨김 */
             .modal-close { top: 0.5rem; right: 1.5rem; font-size: 2rem; }
             .scroll-top-btn { bottom: 1.5rem; right: 1.5rem; width: 45px; height: 45px; }
         }
@@ -204,9 +207,9 @@
             <div class="header-left"></div>
             <a href="#" class="header-logo interactable" onclick="goHome(event)">SENN</a>
             <div class="header-sns">
-                <a href="#" class="sns-link interactable" title="YouTube">📺</a>
-                <a href="#" class="sns-link interactable" title="ArtStation">🎨</a>
-                <a href="#" class="sns-link interactable" title="Instagram">📸</a>
+                <a href="#" class="sns-link interactable" title="Email Copy" onclick="copyEmail(event)">📧</a>
+                <a href="https://www.youtube.com/@sennxe" target="_blank" class="sns-link interactable" title="YouTube">📺</a>
+                <a href="https://www.artstation.com/sennxe" target="_blank" class="sns-link interactable" title="ArtStation">🎨</a>
             </div>
         </div>
     </header>
@@ -234,22 +237,22 @@
                     <h3 class="grid-title">Wriothesley (라이오슬리)</h3>
                 </article>
 
-                <!-- 임시 포트폴리오 3~6 -->
+                <!-- 임시 포트폴리오 (제목 모두 '1'로 변경) -->
                 <article class="grid-item interactable" onclick="openModal('temp1')">
-                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Stylized Character"></div>
-                    <h3 class="grid-title">Stylized Character Creation</h3>
+                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
+                    <h3 class="grid-title">1</h3>
                 </article>
                 <article class="grid-item interactable" onclick="openModal('temp2')">
-                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Environment"></div>
-                    <h3 class="grid-title">Environment Asset Modularity</h3>
+                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
+                    <h3 class="grid-title">1</h3>
                 </article>
                 <article class="grid-item interactable" onclick="openModal('temp3')">
-                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Motorsport"></div>
-                    <h3 class="grid-title">Motorsport Vehicle Modeling</h3>
+                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
+                    <h3 class="grid-title">1</h3>
                 </article>
                 <article class="grid-item interactable" onclick="openModal('temp4')">
-                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Weapon Concept"></div>
-                    <h3 class="grid-title">Sci-Fi Weapon Concept Art</h3>
+                    <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
+                    <h3 class="grid-title">1</h3>
                 </article>
 
             </div>
@@ -292,10 +295,10 @@
                 <div class="cv-section">
                     <h3 class="cv-section-title">CONTACT & CHANNELS</h3>
                     <div class="contact-list">
-                        <p><span class="contact-icon">📧</span> sennxe@gmail.com</p>
-                        <p><span class="contact-icon">🎨</span> @sennxe (ArtStation & YouTube)</p>
-                        <p><span class="contact-icon">📸</span> poit4poit (Work)</p>
-                        <p><span class="contact-icon">🔒</span> sennxp (Personal)</p>
+                        <!-- 클릭 복사 및 다이렉트 링크 적용 -->
+                        <p><a href="#" class="contact-link interactable" onclick="copyEmail(event)"><span class="contact-icon">📧</span> sennxe@gmail.com <span class="contact-hint">(Click to copy)</span></a></p>
+                        <p><a href="https://www.artstation.com/sennxe" target="_blank" class="contact-link interactable"><span class="contact-icon">🎨</span> @sennxe (ArtStation)</a></p>
+                        <p><a href="https://www.youtube.com/@sennxe" target="_blank" class="contact-link interactable"><span class="contact-icon">📺</span> @sennxe (YouTube)</a></p>
                     </div>
                 </div>
             </div>
@@ -304,6 +307,18 @@
     </main>
 
     <script>
+        // ================= 이메일 복사 기능 =================
+        function copyEmail(event) {
+            event.preventDefault();
+            const email = "sennxe@gmail.com";
+            navigator.clipboard.writeText(email).then(() => {
+                alert("이메일 주소가 복사되었습니다: " + email);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        // ====================================================
+
         const projectData = {
             'saki': {
                 title: 'Saki (사키)',
@@ -321,19 +336,19 @@
                 ]
             },
             'temp1': {
-                title: 'Stylized Character Creation',
+                title: '1',
                 images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ]
             },
             'temp2': {
-                title: 'Environment Asset Modularity',
+                title: '1',
                 images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ]
             },
             'temp3': {
-                title: 'Motorsport Vehicle Modeling',
+                title: '1',
                 images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ]
             },
             'temp4': {
-                title: 'Sci-Fi Weapon Concept Art',
+                title: '1',
                 images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ]
             }
         };
