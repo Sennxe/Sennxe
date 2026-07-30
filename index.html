@@ -1,8 +1,396 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://sennxe.myportfolio.com" />
-  </head>
-  <body>
-  </body>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENN | 3D Designer</title>
+    <style>
+        /* 기본 설정 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; line-height: 1.6; }
+
+        /* ================= 커스텀 마우스 커서 및 드래그 설정 ================= */
+        /* 기본 마우스 커서 숨기기 */
+        body, a, button, .filter-btn { cursor: none !important; }
+        
+        /* 텍스트 드래그(선택) 색상 변경 */
+        ::selection {
+            background-color: #aec5e8;
+            color: #1a1a1a;
+        }
+
+        /* 마우스 도트 디자인 */
+        .cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            width: 16px; height: 16px;
+            background-color: #aec5e8; /* 기본 도트 색상 */
+            border-radius: 50%;
+            pointer-events: none; /* 클릭 방해 금지 */
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            /* 글자/그림 위에 올라가면 색상이 반전되거나 어우러지게 하는 핵심 속성 */
+            mix-blend-mode: difference; 
+            transition: width 0.2s ease, height 0.2s ease;
+        }
+
+        /* 링크나 이미지에 닿았을 때 도트가 커지는 효과 */
+        .cursor-dot.hovered {
+            width: 45px;
+            height: 45px;
+        }
+
+        /* 터치 기반 모바일 기기에서는 커스텀 커서 숨기기 및 기본 커서 복원 */
+        @media (pointer: coarse) {
+            .cursor-dot { display: none; }
+            body, a, button, .filter-btn { cursor: auto !important; }
+        }
+        /* ========================================================= */
+
+        /* 색상 변수 (#aec5e8 적용) */
+        :root {
+            --brand-color: #aec5e8;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --border-color: #dcdace;
+        }
+
+        /* ---------------- 헤더 영역 ---------------- */
+        header { 
+            position: sticky; top: 0; z-index: 1000;
+            background-color: #f6f5ef; 
+            padding: 1.5rem 3rem; 
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+            border-bottom: 1px solid transparent; 
+            transition: border-bottom 0.3s ease;
+        }
+        .header-left { }
+        
+        .header-logo { 
+            font-size: 1.3rem; font-weight: 800; letter-spacing: 3px; 
+            text-align: center; color: var(--text-dark); text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        /* Hover 시엔 마우스 반전 효과가 들어가므로 굳이 컬러 변경을 안 해도 예쁩니다 */
+        
+        .header-sns { 
+            display: flex; gap: 1.2rem; justify-content: flex-end; align-items: center; 
+        }
+        .sns-link { 
+            text-decoration: none; font-size: 1.4rem; 
+            transition: transform 0.2s ease; display: inline-block;
+        }
+        .sns-link:hover { transform: scale(1.1); }
+
+        /* ---------------- 메인 컨테이너 ---------------- */
+        .main-container {
+            max-width: 1400px; margin: 4rem auto; padding: 0 3rem;
+        }
+
+        .page-title {
+            font-size: 4.5rem; font-weight: 300; color: var(--text-dark); letter-spacing: -2px; margin-bottom: 2rem;
+        }
+        hr.divider {
+            border: none; border-top: 1px solid var(--border-color); margin-bottom: 2rem;
+        }
+
+        /* ---------------- 필터 탭 ---------------- */
+        .filter-nav {
+            display: flex; gap: 0.8rem; margin-bottom: 4rem;
+        }
+        .filter-btn {
+            padding: 0.6rem 1.5rem; border: 1px solid var(--border-color); background: transparent;
+            border-radius: 30px; font-size: 0.9rem; font-weight: 500; color: var(--text-gray);
+            transition: all 0.2s ease;
+        }
+        .filter-btn:hover { border-color: #999; color: var(--text-dark); }
+        .filter-btn.active {
+            border-color: var(--text-dark); color: var(--text-dark); font-weight: 600;
+        }
+
+        /* ---------------- 콘텐츠 뷰 영역 ---------------- */
+        .view-section {
+            display: none; animation: fadeIn 0.5s ease;
+        }
+        .view-section.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ======== 1. 포트폴리오 뷰 ======== */
+        .featured-post {
+            display: flex; gap: 4rem; align-items: center; margin-bottom: 6rem;
+        }
+        .featured-text { flex: 1; }
+        .featured-category {
+            color: var(--brand-color); font-size: 0.75rem; font-weight: 700; 
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; display: block;
+        }
+        .featured-title {
+            font-size: 3rem; font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1px;
+        }
+        .featured-img-holder {
+            flex: 1.2; background-color: #2c2c2c; border-radius: 8px; min-height: 450px;
+            display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+        }
+
+        .portfolio-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 4rem 2rem;
+            border-top: 1px solid var(--border-color); padding-top: 4rem;
+        }
+        .grid-item {
+            display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .grid-item.visible { opacity: 1; transform: translateY(0); }
+        
+        .grid-img {
+            width: 100%; height: 260px; background-color: #e0ded5; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            color: #999; font-size: 0.8rem; margin-bottom: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .grid-item:hover .grid-img { transform: scale(1.02); }
+        .grid-title { font-size: 1.3rem; font-weight: 500; line-height: 1.3; color: var(--text-dark); }
+
+        /* ======== 2. CV (이력서/소개) 뷰 ======== */
+        .cv-container { max-width: 900px; }
+        .cv-header { margin-bottom: 4rem; }
+        .cv-name { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
+        .cv-role { color: var(--brand-color); font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; }
+        
+        .cv-section { margin-bottom: 4rem; }
+        .cv-section-title { 
+            font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dark); 
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1.5rem;
+        }
+        .cv-text { font-size: 1.1rem; color: #222; line-height: 1.8; text-align: justify; }
+        .cv-separator { margin: 1.5rem 0; font-size: 1.5rem; color: var(--brand-color); font-weight: 300; }
+
+        .tools-list { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .tool-chip {
+            background-color: transparent; border: 1px solid var(--border-color); padding: 0.5rem 1.2rem;
+            border-radius: 30px; font-size: 0.9rem; color: var(--text-dark); font-weight: 500;
+        }
+
+        .contact-list p { margin-bottom: 0.5rem; font-size: 1.1rem; color: #222; }
+        .contact-icon { display: inline-block; width: 30px; }
+
+        /* ================= 반응형 ================= */
+        @media (max-width: 1024px) {
+            .featured-post { flex-direction: column; gap: 2rem; }
+            .featured-img-holder { width: 100%; min-height: 350px; }
+        }
+        @media (max-width: 768px) {
+            header { display: flex; justify-content: space-between; padding: 1rem 1.5rem; }
+            .header-left { display: none; }
+            .header-logo { font-size: 1.1rem; }
+            .main-container { padding: 0 1.5rem; margin: 2rem auto; }
+            .page-title { font-size: 3rem; }
+            .featured-title { font-size: 2rem; }
+            .filter-nav { overflow-x: auto; padding-bottom: 0.5rem; }
+            .portfolio-grid { grid-template-columns: 1fr; padding-top: 2rem; }
+            .cv-name { font-size: 2.5rem; }
+            .cv-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 마우스 커서 도트 DOM 추가 -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- 상단 헤더 -->
+    <header id="site-header">
+        <div class="header-left"></div>
+        <a href="#" class="header-logo interactable" onclick="goHome(event)">SENN</a>
+        <div class="header-sns">
+            <a href="#" class="sns-link interactable" title="YouTube">📺</a>
+            <a href="#" class="sns-link interactable" title="ArtStation">🎨</a>
+            <a href="#" class="sns-link interactable" title="Instagram">📸</a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <h1 class="page-title">Portfolio</h1>
+        <hr class="divider">
+
+        <nav class="filter-nav">
+            <button class="filter-btn active interactable" onclick="switchTab('portfolio', this)">Portfolio</button>
+            <button class="filter-btn interactable" onclick="switchTab('cv', this)">CV</button>
+        </nav>
+
+        <!-- 뷰 1: 포트폴리오 섹션 -->
+        <section id="view-portfolio" class="view-section active">
+            <article class="featured-post">
+                <div class="featured-text">
+                    <span class="featured-category">Inside the Pipeline</span>
+                    <h2 class="featured-title">Deconstructing Hard-Surface Workflows</h2>
+                    <a href="#" class="filter-btn interactable" style="display: inline-block; border-color: var(--text-dark); color: var(--text-dark);">View Project</a>
+                </div>
+                <!-- 이미지 홀더에도 마우스 인터랙션 클래스 추가 -->
+                <div class="featured-img-holder interactable">Main Featured Image Placeholder</div>
+            </article>
+
+            <div class="portfolio-grid">
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 1</div><h3 class="grid-title">Advanced Mecha Rigging & Optimization</h3></article>
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 2</div><h3 class="grid-title">PBR Texturing pipeline for realism</h3></article>
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 3</div><h3 class="grid-title">Stylized Character Creation</h3></article>
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 4</div><h3 class="grid-title">Environment Asset Modularity</h3></article>
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 5</div><h3 class="grid-title">Motorsport Vehicle Modeling</h3></article>
+                <article class="grid-item"><div class="grid-img interactable">Image Holder 6</div><h3 class="grid-title">Sci-Fi Weapon Concept Art</h3></article>
+            </div>
+        </section>
+
+        <!-- 뷰 2: CV 섹션 -->
+        <section id="view-cv" class="view-section">
+            <div class="cv-container">
+                
+                <div class="cv-header">
+                    <h2 class="cv-name">Senn (센)</h2>
+                    <span class="cv-role">3D Modeler & Artist</span>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">ABOUT ME</h3>
+                    <p class="cv-text">
+                        Born on January 20, 2002, in South Korea, Chae-yeon "SENN" Kim demonstrated an aptitude for mechanical engineering from a young age before majoring in 3D art and languages at university. Adept at creating both photorealistic and stylized visuals, SENN is especially passionate about producing 3D artwork centered around motorsports. Today, SENN's creative portfolio is driven by a core focus on 3D modeling, design, and game development.
+                    </p>
+                    <div class="cv-separator">-</div>
+                    <p class="cv-text">
+                        Chaeyeon "SENN" Kim은 2002년 1월 20일 대한민국에서 태어났습니다. 어린 시절부터 기계공학에 두각을 보였으며, 이후 대학에서 3D와 언어를 전공했습니다. 실사와 캐주얼 스타일을 모두 능숙하게 다루며, 특히 관심 분야인 모터스포츠를 중심으로 한 3D 아트워크 제작에 깊은 열정을 쏟고 있습니다. 현재는 3D 모델링, 디자인, 그리고 게임 개발을 주력으로 창작 포트폴리오를 확장해 나가고 있습니다.
+                    </p>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">SOFTWARE & TOOLS</h3>
+                    <div class="tools-list">
+                        <span class="tool-chip">Maya</span>
+                        <span class="tool-chip">3DS Max</span>
+                        <span class="tool-chip">ZBrush</span>
+                        <span class="tool-chip">Substance Painter</span>
+                        <span class="tool-chip">Unity</span>
+                        <span class="tool-chip">Unreal Engine</span>
+                        <span class="tool-chip">Adobe CC</span>
+                        <span class="tool-chip">AutoCAD</span>
+                        <span class="tool-chip">Figma</span>
+                    </div>
+                </div>
+
+                <div class="cv-section">
+                    <h3 class="cv-section-title">CONTACT & CHANNELS</h3>
+                    <div class="contact-list">
+                        <p><span class="contact-icon">📧</span> sennxe@gmail.com</p>
+                        <p><span class="contact-icon">🎨</span> @sennxe (ArtStation & YouTube)</p>
+                        <p><span class="contact-icon">📸</span> poit4poit (Work)</p>
+                        <p><span class="contact-icon">🔒</span> sennxp (Personal)</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // ================= 커스텀 커서 스크립트 =================
+        const cursorDot = document.getElementById('cursor-dot');
+        
+        // 마우스 이동 시 도트 위치 업데이트
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        // 상호작용 가능한 요소들에 닿았을 때 도트 크기 키우기 (hovered 클래스)
+        const interactables = document.querySelectorAll('.interactable, a, button');
+        interactables.forEach((el) => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hovered');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hovered');
+            });
+        });
+        // =======================================================
+
+
+        // 스크롤 시 헤더 보더라인 활성화
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('site-header');
+            if (window.scrollY > 20) {
+                header.style.borderBottom = '1px solid var(--border-color)';
+            } else {
+                header.style.borderBottom = '1px solid transparent';
+            }
+        });
+
+        // 탭 전환
+        function switchTab(tabId, clickedBtn) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            clickedBtn.classList.add('active');
+
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const activeSection = document.getElementById('view-' + tabId);
+            activeSection.classList.add('active');
+
+            if(tabId === 'portfolio') {
+                const items = document.querySelectorAll('.grid-item');
+                items.forEach(item => item.classList.remove('visible'));
+                setTimeout(initObserver, 50);
+            }
+        }
+
+        // 로고 클릭 시 홈으로 초기화
+        function goHome(event) {
+            event.preventDefault(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            
+            const portfolioBtn = document.querySelector('.filter-btn');
+            if (!portfolioBtn.classList.contains('active')) {
+                switchTab('portfolio', portfolioBtn);
+            }
+        }
+
+        // 포트폴리오 스크롤 애니메이션
+        let observer;
+        function initObserver() {
+            if(observer) observer.disconnect();
+
+            const options = {
+                root: null,
+                rootMargin: '0px 0px -30px 0px',
+                threshold: 0.1
+            };
+
+            observer = new IntersectionObserver((entries) => {
+                let delay = 0;
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, delay);
+                        delay += 100;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.grid-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initObserver();
+        });
+    </script>
+</body>
 </html>
