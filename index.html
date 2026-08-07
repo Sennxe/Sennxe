@@ -14,10 +14,11 @@
         /* 기본 설정 */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comfortaa', 'Noto Sans KR', sans-serif; }
         
-        /* 상단 고정 배너 높이(40px)만큼 본문을 전체적으로 내려줍니다 */
+        /* 스크롤바 밀림 방지 및 상단 배너 여백 설정 */
         body { 
-            background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; line-height: 1.6; 
-            padding-top: 40px; 
+            background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; 
+            overflow-y: scroll; 
+            line-height: 1.6; padding-top: 40px; 
         }
 
         /* ================= 커스텀 마우스 커서 ================= */
@@ -48,12 +49,10 @@
             --border-color: #dcdace;
         }
 
-        /* ================= 최상단 공지 배너 (항상 고정) ================= */
+        /* ================= 최상단 공지 배너 ================= */
         .top-announcement-banner {
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 40px;
-            background-color: #eeebe0; 
-            border-bottom: 1px solid var(--border-color);
+            position: fixed; top: 0; left: 0; width: 100%; height: 40px;
+            background-color: #eeebe0; border-bottom: 1px solid var(--border-color);
             display: flex; justify-content: center; align-items: center;
             font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px;
             color: var(--text-gray); text-transform: uppercase; z-index: 3000; 
@@ -67,13 +66,10 @@
 
         /* ================= 2단 레이아웃 ================= */
         .layout-wrapper { 
-            display: flex; 
-            min-height: calc(100vh - 40px);
-            /* 여백 최소화 및 최대 너비 대폭 확장 */
-            width: 98%;
-            max-width: 1920px; 
-            margin: 0 auto; 
-            padding: 0 1rem;
+            display: flex; min-height: calc(100vh - 40px);
+            /* 너비를 살짝 줄여서 양옆에 숨통이 트이는 여백 생성 */
+            width: 92%; max-width: 1600px; 
+            margin: 0 auto; padding: 0 1rem;
         }
 
         /* ---------------- 1. 좌측 사이드바 ---------------- */
@@ -132,9 +128,7 @@
         }
 
         .content-inner {
-            width: 100%; 
-            /* 내부 콘텐츠 최대 너비를 1600px로 확장하여 카드가 커지도록 함 */
-            max-width: 1600px; 
+            width: 100%; max-width: 1400px; /* 너무 퍼지지 않게 1400px로 제한 */
         }
 
         .main-sticky-header {
@@ -165,8 +159,7 @@
         /* ======== 1. 포트폴리오 그리드 뷰 ======== */
         .portfolio-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); 
-            gap: 4rem 3rem; /* 카드가 커진 만큼 가로 간격도 살짝 넓혀줌 */
-            padding-top: 0.5rem;
+            gap: 4rem 3rem; padding-top: 0.5rem;
         }
         .grid-item {
             display: flex; flex-direction: column; opacity: 0; transform: translateY(40px);
@@ -188,19 +181,34 @@
         .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
         /* ======== 3. CV (이력서/소개) 뷰 ======== */
-        /* 이력서 텍스트는 너무 넓어지면 가독성이 떨어지므로 1000px 유지 */
         .cv-container { width: 100%; max-width: 1000px; padding-top: 1rem; } 
-        .cv-header { margin-bottom: 4rem; }
+        
+        /* 이름과 섹션 제목은 자리 유지 (기본 왼쪽 정렬) */
+        .cv-header { margin-bottom: 4rem; text-align: left; }
         .cv-name { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
         .cv-role { color: var(--brand-color); font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
         
         .cv-section { margin-bottom: 4rem; }
         .cv-section-title { 
             font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dark); 
-            border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 2rem;
+            text-align: left;
         }
-        .cv-text { font-size: 1.1rem; color: #222; line-height: 1.8; text-align: justify; font-weight: 400; }
-        .cv-separator { margin: 1.5rem 0; font-size: 1.5rem; color: var(--brand-color); font-weight: 300; }
+        
+        /* 텍스트 내용: 한가운데 정렬 */
+        .cv-text { 
+            font-size: 1.1rem; color: #222; line-height: 1.8; 
+            text-align: center; /* 텍스트를 중앙으로 */
+            font-weight: 400; 
+        }
+        
+        /* 섹션 분리선: 길이 늘리고 완벽한 중앙 정렬 */
+        .cv-separator { 
+            margin: 2.5rem auto; 
+            width: 150px; /* 길이를 늘림 */
+            height: 2px; /* 선 두께 */
+            background-color: var(--brand-color); /* 색상 유지 */
+        }
         
         .tools-marquee-container {
             width: 100%; overflow: hidden; padding: 1.5rem 0; display: flex;
@@ -299,7 +307,7 @@
                     <button id="back-btn" class="back-btn interactable" onclick="goBackToPortfolio()" style="display: none;">— Back to Portfolio</button>
                 </div>
 
-                <!-- 뷰 1: 포트폴리오 그리드 -->
+                <!-- 뷰 1: 포트폴리오 그리드 (초기 화면) -->
                 <section id="view-portfolio" class="view-section active">
                     <div class="portfolio-grid">
                         <article class="grid-item interactable" onclick="openProject('saki', null)">
@@ -337,19 +345,26 @@
                 <!-- 뷰 3: CV 섹션 -->
                 <section id="view-cv" class="view-section">
                     <div class="cv-container">
+                        
+                        <!-- 이름, 역할 부분 (왼쪽 정렬 유지) -->
                         <div class="cv-header">
                             <h2 class="cv-name">Senn</h2>
                             <span class="cv-role">3D Modeler & Artist</span>
                         </div>
                         
                         <div class="cv-section">
+                            <!-- 섹션 제목 부분 (왼쪽 정렬 유지) -->
                             <h3 class="cv-section-title">ABOUT ME</h3>
+                            <!-- 내용 텍스트 부분 (가운데 정렬) -->
                             <p class="cv-text">
                                 Born on January 20, 2002, in South Korea, Chae-yeon "SENN" Kim demonstrated an aptitude for mechanical engineering from a young age before majoring in 3D art and languages at university. Adept at creating both photorealistic and stylized visuals, SENN is especially passionate about producing 3D artwork centered around motorsports. Today, SENN's creative portfolio is driven by a core focus on 3D modeling, design, and game development.
                             </p>
-                            <div class="cv-separator">-</div>
+                            
+                            <!-- 구분선 부분 (가로로 길게, 가운데 정렬) -->
+                            <div class="cv-separator"></div>
+                            
                             <p class="cv-text">
-                                Chaeyeon "SENN" Kim은 2002년 1월 20일 대한민국에서 태어났습니다. 어린 시절부터 기계공학에 두각을 보였으며, 이후 대학에서 3D와 언어를 전공했습니다. 실사와 캐주얼 스타일을 모두 능숙하게 다루며, 특히 관심 분야인 모터스포츠를 중심으로 한 3D 아트워크 제작에 깊은 열정을 쏟고 있습니다. 현재는 3D 모델링, 디자인, 그리고 게임 개발을 주력으로 창작 포트폴리오를 확장해 나가고 있습니다.
+                                2002년 1월 20일 대한민국에서 태어났습니다. 어린 시절부터 기계공학에 두각을 보였으며, 이후 대학에서 3D와 언어를 전공했습니다. 실사와 캐주얼 스타일을 다루며, 특히 관심 분야인 모터스포츠를 중심으로 한 3D 아트워크 제작에 깊은 열정을 쏟고 있습니다. 현재는 3D 모델링, 디자인, 그리고 게임 개발을 주력으로 창작 포트폴리오를 확장해 나가고 있습니다.
                             </p>
                         </div>
                         
