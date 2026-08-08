@@ -112,7 +112,7 @@
             max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
             display: flex; flex-direction: column; padding-left: 1rem;
         }
-        .nav-accordion.open .sidebar-submenu { max-height: 500px; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .nav-accordion.open .sidebar-submenu { max-height: 500px; padding-top: 0.5rem; padding-bottom: 0.5rem; overflow-y: auto;}
 
         .submenu-link {
             padding: 0.5rem 1rem; border: none; background: transparent;
@@ -161,6 +161,10 @@
             display: grid; grid-template-columns: repeat(3, 1fr); 
             gap: 4rem 3rem; padding-top: 0.5rem;
         }
+        
+        /* 로딩 메시지 스타일 */
+        .loading-message { grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 4rem 0; }
+
         .grid-item {
             display: flex; flex-direction: column; opacity: 0; transform: translateY(40px);
             transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -183,7 +187,6 @@
         /* ======== 3. CV (이력서/소개) 뷰 ======== */
         .cv-container { width: 100%; max-width: 1000px; padding-top: 1rem; } 
         
-        /* 이름과 섹션 제목은 자리 유지 (기본 왼쪽 정렬) */
         .cv-header { margin-bottom: 4rem; text-align: left; }
         .cv-name { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
         .cv-role { color: var(--brand-color); font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
@@ -195,19 +198,17 @@
             text-align: left;
         }
         
-        /* 텍스트 내용: 한가운데 정렬 */
         .cv-text { 
             font-size: 1.1rem; color: #222; line-height: 1.8; 
-            text-align: center; /* 텍스트를 중앙으로 */
+            text-align: center; 
             font-weight: 400; 
         }
         
-        /* 섹션 분리선: 길이 늘리고 완벽한 중앙 정렬 */
         .cv-separator { 
             margin: 2.5rem auto; 
-            width: 150px; /* 길이를 늘림 */
-            height: 2px; /* 선 두께 */
-            background-color: var(--brand-color); /* 색상 유지 */
+            width: 150px; 
+            height: 2px; 
+            background-color: var(--brand-color); 
         }
         
         .tools-marquee-container {
@@ -291,6 +292,7 @@
                         <span>Portfolio</span>
                         <span class="nav-arrow">▼</span>
                     </button>
+                    <!-- 자바스크립트가 여기에 서브메뉴를 자동 생성합니다 -->
                     <div class="sidebar-submenu" id="portfolio-submenu"></div>
                 </div>
             </div>
@@ -309,31 +311,9 @@
 
                 <!-- 뷰 1: 포트폴리오 그리드 (초기 화면) -->
                 <section id="view-portfolio" class="view-section active">
-                    <div class="portfolio-grid">
-                        <article class="grid-item interactable" onclick="openProject('saki', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Saki"></div>
-                            <h3 class="grid-title">Saki</h3>
-                        </article>
-                        <article class="grid-item interactable" onclick="openProject('wriothesley', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Wriothesley_KimChae-yeon0.png?raw=true" alt="Wriothesley"></div>
-                            <h3 class="grid-title">Wriothesley</h3>
-                        </article>
-                        <article class="grid-item interactable" onclick="openProject('temp1', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
-                            <h3 class="grid-title">1</h3>
-                        </article>
-                        <article class="grid-item interactable" onclick="openProject('temp2', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
-                            <h3 class="grid-title">1</h3>
-                        </article>
-                        <article class="grid-item interactable" onclick="openProject('temp3', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
-                            <h3 class="grid-title">1</h3>
-                        </article>
-                        <article class="grid-item interactable" onclick="openProject('temp4', null)">
-                            <div class="grid-img"><img src="https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" alt="Temp"></div>
-                            <h3 class="grid-title">1</h3>
-                        </article>
+                    <!-- 자바스크립트가 여기에 갤러리를 자동 생성합니다 -->
+                    <div class="portfolio-grid" id="portfolio-grid-container">
+                        <p class="loading-message">아트스테이션에서 데이터를 불러오는 중입니다...</p>
                     </div>
                 </section>
 
@@ -353,14 +333,11 @@
                         </div>
                         
                         <div class="cv-section">
-                            <!-- 섹션 제목 부분 (왼쪽 정렬 유지) -->
                             <h3 class="cv-section-title">ABOUT ME</h3>
-                            <!-- 내용 텍스트 부분 (가운데 정렬) -->
                             <p class="cv-text">
                                 Born on January 20, 2002, in South Korea, Chae-yeon "SENN" Kim demonstrated an aptitude for mechanical engineering from a young age before majoring in 3D art and languages at university. Adept at creating both photorealistic and stylized visuals, SENN is especially passionate about producing 3D artwork centered around motorsports. Today, SENN's creative portfolio is driven by a core focus on 3D modeling, design, and game development.
                             </p>
                             
-                            <!-- 구분선 부분 (가로로 길게, 가운데 정렬) -->
                             <div class="cv-separator"></div>
                             
                             <p class="cv-text">
@@ -403,6 +380,9 @@
     </div>
 
     <script>
+        // --------------------------------------------------------
+        // 유틸리티 함수
+        // --------------------------------------------------------
         function copyEmail(event) {
             event.preventDefault();
             navigator.clipboard.writeText("sennxe@gmail.com").then(() => {
@@ -410,56 +390,132 @@
             });
         }
 
-        const projectData = {
-            'saki': { title: 'Saki', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true", "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon1.png?raw=true", "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon2.png?raw=true", "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon3.png?raw=true" ] },
-            'wriothesley': { title: 'Wriothesley', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Wriothesley_KimChae-yeon0.png?raw=true" ] },
-            'temp1': { title: '1', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ] },
-            'temp2': { title: '1', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ] },
-            'temp3': { title: '1', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ] },
-            'temp4': { title: '1', images: [ "https://github.com/Sennxe/Sennxe/blob/main/Portfolio/Saki_KimChae-yeon0.png?raw=true" ] }
-        };
+        const topBtn = document.getElementById("scrollTopBtn");
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { topBtn.classList.add("visible"); } 
+            else { topBtn.classList.remove("visible"); }
+        });
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-        function initSubmenu() {
-            const submenu = document.getElementById('portfolio-submenu');
-            Object.keys(projectData).forEach(key => {
-                const btn = document.createElement('button');
-                btn.className = 'submenu-link interactable';
-                btn.id = 'submenu-btn-' + key;
-                btn.innerText = projectData[key].title;
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    openProject(key, btn);
-                };
-                btn.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
-                btn.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
-                submenu.appendChild(btn);
-            });
+        // --------------------------------------------------------
+        // 커스텀 커서 로직
+        // --------------------------------------------------------
+        const cursorDot = document.getElementById('cursor-dot');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        // 정적 요소에 커서 이벤트 달기
+        document.querySelectorAll('.interactable, a, button, .tools-marquee-container').forEach((el) => {
+            el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
+        });
+
+        // 동적 요소용 커서 이벤트 달아주는 헬퍼 함수
+        function addCursorHover(element) {
+            element.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
+            element.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
         }
 
+        // --------------------------------------------------------
+        // 아트스테이션 연동 로직 (새롭게 추가된 부분)
+        // --------------------------------------------------------
+        let dynamicProjectData = {}; // 데이터를 동적으로 담을 객체
+
+        function fetchArtStationData() {
+            const rssUrl = 'https://www.artstation.com/sennxe.rss';
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const gridContainer = document.getElementById('portfolio-grid-container');
+                    const submenuContainer = document.getElementById('portfolio-submenu');
+                    
+                    gridContainer.innerHTML = ''; // '불러오는 중...' 메시지 삭제
+                    submenuContainer.innerHTML = ''; // 기존 서브메뉴 비우기
+                    
+                    if (data.status === 'ok' && data.items.length > 0) {
+                        data.items.forEach((item, index) => {
+                            // RSS Description 안에 포함된 모든 이미지(img) 태그를 추출합니다
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(item.description, 'text/html');
+                            const imgTags = doc.querySelectorAll('img');
+                            const images = Array.from(imgTags).map(img => img.src);
+                            
+                            // 이미지가 하나라도 있는 포스팅만 웹페이지에 추가
+                            if (images.length > 0) {
+                                const projectId = 'project_' + index;
+                                
+                                // 데이터 객체에 저장 (썸네일은 첫 번째 이미지로, 나머지는 상세 뷰용)
+                                dynamicProjectData[projectId] = {
+                                    title: item.title,
+                                    images: images
+                                };
+                                
+                                // 1. 사이드바 서브메뉴 버튼 생성
+                                const btn = document.createElement('button');
+                                btn.className = 'submenu-link interactable';
+                                btn.id = 'submenu-btn-' + projectId;
+                                btn.innerText = item.title;
+                                btn.onclick = (e) => {
+                                    e.stopPropagation();
+                                    openProject(projectId, btn);
+                                };
+                                addCursorHover(btn);
+                                submenuContainer.appendChild(btn);
+                                
+                                // 2. 메인 갤러리 그리드 아이템 생성
+                                const article = document.createElement('article');
+                                article.className = 'grid-item interactable';
+                                article.onclick = () => openProject(projectId, btn);
+                                addCursorHover(article);
+                                
+                                article.innerHTML = `
+                                    <div class="grid-img"><img src="${images[0]}" alt="${item.title}"></div>
+                                    <h3 class="grid-title">${item.title}</h3>
+                                `;
+                                gridContainer.appendChild(article);
+                            }
+                        });
+                        
+                        // 새롭게 생성된 아이템들에 페이드인 애니메이션 옵저버 적용
+                        initObserver();
+                    } else {
+                        gridContainer.innerHTML = '<p class="loading-message">작품을 불러오지 못했습니다.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('RSS Fetch Error:', error);
+                    document.getElementById('portfolio-grid-container').innerHTML = 
+                        '<p class="loading-message">네트워크 오류로 아트스테이션과 연결할 수 없습니다.</p>';
+                });
+        }
+
+        // --------------------------------------------------------
+        // 네비게이션 및 뷰 컨트롤 로직
+        // --------------------------------------------------------
         function togglePortfolioAccordion(btn) {
             const accordion = document.getElementById('portfolio-accordion');
             const isOpen = accordion.classList.contains('open');
             
-            if(isOpen) { 
-                accordion.classList.remove('open'); 
-            } else { 
-                accordion.classList.add('open'); 
-            }
+            if(isOpen) { accordion.classList.remove('open'); } 
+            else { accordion.classList.add('open'); }
             
             switchTab('portfolio', btn, true);
         }
 
         function openProject(projectId, clickedSubmenuBtn) {
             const container = document.getElementById('project-image-container');
-            const currentData = projectData[projectId];
+            const currentData = dynamicProjectData[projectId]; // 동적 데이터 사용
             
             container.innerHTML = ''; 
             currentData.images.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
                 img.classList.add('interactable');
-                img.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
-                img.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
+                addCursorHover(img);
                 container.appendChild(img);
             });
 
@@ -520,25 +576,6 @@
             }
         }
 
-        const topBtn = document.getElementById("scrollTopBtn");
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) { topBtn.classList.add("visible"); } 
-            else { topBtn.classList.remove("visible"); }
-        });
-
-        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-        const cursorDot = document.getElementById('cursor-dot');
-        window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-        });
-        const interactables = document.querySelectorAll('.interactable, a, button, .tools-marquee-container');
-        interactables.forEach((el) => {
-            el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
-        });
-
         let observer;
         function initObserver() {
             if(observer) observer.disconnect();
@@ -556,9 +593,12 @@
             document.querySelectorAll('.grid-item').forEach(item => observer.observe(item));
         }
 
+        // --------------------------------------------------------
+        // 초기화 실행
+        // --------------------------------------------------------
         document.addEventListener("DOMContentLoaded", () => {
-            initSubmenu();
-            initObserver();
+            // 하드코딩된 서브메뉴 대신 아트스테이션에서 데이터를 긁어와 모든 걸 구성합니다.
+            fetchArtStationData();
         });
     </script>
 </body>
