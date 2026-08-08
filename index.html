@@ -424,7 +424,9 @@
         let dynamicProjectData = {}; // 데이터를 동적으로 담을 객체
 
         function fetchArtStationData() {
-            const rssUrl = 'https://www.artstation.com/sennxe.rss';
+            // 1. rss2json API의 캐시를 우회하기 위해 매번 새로운 주소처럼 인식시킵니다.
+            const randomString = Math.random().toString(36).substring(7);
+            const rssUrl = `https://www.artstation.com/sennxe.rss?bust=${randomString}`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
             
             fetch(apiUrl)
@@ -438,23 +440,36 @@
                     
                     if (data.status === 'ok' && data.items.length > 0) {
                         data.items.forEach((item, index) => {
-                            // RSS Description 안에 포함된 모든 이미지(img) 태그를 추출합니다
+                            const projectId = 'project_' + index;
+                            
+                            // 2. 아트스테이션이 제공하는 '공식 썸네일' 이미지를 최우선으로 확보합니다.
+                            let thumbnail = item.thumbnail || '';
+                            
+                            // 3. 본문(Description)에서 이모지를 거르고 진짜 '작품 이미지'만 추출합니다.
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(item.description, 'text/html');
                             const imgTags = doc.querySelectorAll('img');
-                            const images = Array.from(imgTags).map(img => img.src);
                             
-                            // 이미지가 하나라도 있는 포스팅만 웹페이지에 추가
-                            if (images.length > 0) {
-                                const projectId = 'project_' + index;
-                                
-                                // 데이터 객체에 저장 (썸네일은 첫 번째 이미지로, 나머지는 상세 뷰용)
+                            let descImages = Array.from(imgTags)
+                                .map(img => img.src)
+                                .filter(src => src.includes('/assets/') || src.includes('/projects/')); // 이모지 필터링 핵심!
+                            
+                            // 4. 상세 페이지용 이미지 목록 통합 (썸네일 + 본문 이미지 중복 제거)
+                            let allImages = [];
+                            if (thumbnail) allImages.push(thumbnail);
+                            allImages = [...new Set([...allImages, ...descImages])]; 
+                            
+                            // 5. 그리드에 보여줄 메인 이미지 (썸네일이 없으면 본문 첫 번째 이미지 사용)
+                            let mainImage = thumbnail || (descImages.length > 0 ? descImages[0] : null);
+                            
+                            // 유효한 이미지가 있는 작품만 화면에 렌더링합니다.
+                            if (mainImage) {
                                 dynamicProjectData[projectId] = {
                                     title: item.title,
-                                    images: images
+                                    images: allImages.length > 0 ? allImages : [mainImage]
                                 };
                                 
-                                // 1. 사이드바 서브메뉴 버튼 생성
+                                // 사이드바 서브메뉴 버튼 생성
                                 const btn = document.createElement('button');
                                 btn.className = 'submenu-link interactable';
                                 btn.id = 'submenu-btn-' + projectId;
@@ -466,22 +481,21 @@
                                 addCursorHover(btn);
                                 submenuContainer.appendChild(btn);
                                 
-                                // 2. 메인 갤러리 그리드 아이템 생성
+                                // 메인 갤러리 그리드 아이템 생성
                                 const article = document.createElement('article');
                                 article.className = 'grid-item interactable';
                                 article.onclick = () => openProject(projectId, btn);
                                 addCursorHover(article);
                                 
                                 article.innerHTML = `
-                                    <div class="grid-img"><img src="${images[0]}" alt="${item.title}"></div>
+                                    <div class="grid-img"><img src="${mainImage}" alt="${item.title}"></div>
                                     <h3 class="grid-title">${item.title}</h3>
                                 `;
                                 gridContainer.appendChild(article);
                             }
                         });
                         
-                        // 새롭게 생성된 아이템들에 페이드인 애니메이션 옵저버 적용
-                        initObserver();
+                        initObserver(); // 애니메이션 재실행
                     } else {
                         gridContainer.innerHTML = '<p class="loading-message">작품을 불러오지 못했습니다.</p>';
                     }
