@@ -5,25 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SENN | 3D Designer</title>
     
-    <!-- 구글 폰트 추가 (Comfortaa & Noto Sans KR) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* 기본 설정 */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comfortaa', 'Noto Sans KR', sans-serif; }
         
-        /* 스크롤바 밀림 방지 및 상단 배너 여백 설정 */
         body { 
             background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; 
             overflow-y: scroll; 
             line-height: 1.6; padding-top: 40px; 
         }
 
-        /* ================= 커스텀 마우스 커서 ================= */
         body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: none !important; }
-        
         ::selection { background-color: #aec5e8; color: #1a1a1a; }
 
         .cursor-dot {
@@ -40,7 +35,6 @@
             body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: auto !important; }
         }
 
-        /* 색상 변수 */
         :root {
             --brand-color: #aec5e8;
             --brand-color-light: #e8f0f8; 
@@ -49,7 +43,6 @@
             --border-color: #dcdace;
         }
 
-        /* ================= 최상단 공지 배너 ================= */
         .top-announcement-banner {
             position: fixed; top: 0; left: 0; width: 100%; height: 40px;
             background-color: #eeebe0; border-bottom: 1px solid var(--border-color);
@@ -64,15 +57,12 @@
         }
         .top-announcement-link:hover { color: var(--text-dark); }
 
-        /* ================= 2단 레이아웃 ================= */
         .layout-wrapper { 
             display: flex; min-height: calc(100vh - 40px);
-            /* 너비를 살짝 줄여서 양옆에 숨통이 트이는 여백 생성 */
             width: 92%; max-width: 1600px; 
             margin: 0 auto; padding: 0 1rem;
         }
 
-        /* ---------------- 1. 좌측 사이드바 ---------------- */
         .sidebar {
             width: 280px; background-color: transparent; border-right: 1px solid var(--border-color);
             position: sticky; top: 40px; height: calc(100vh - 40px); 
@@ -122,13 +112,12 @@
         .submenu-link:hover { color: var(--text-dark); background-color: rgba(0,0,0,0.02); }
         .submenu-link.active { color: var(--brand-color); font-weight: 700; }
 
-        /* ---------------- 2. 우측 메인 콘텐츠 ---------------- */
         .main-content { 
             flex: 1; padding: 0 0 4rem 4rem; width: 100%; 
         }
 
         .content-inner {
-            width: 100%; max-width: 1400px; /* 너무 퍼지지 않게 1400px로 제한 */
+            width: 100%; max-width: 1400px; 
         }
 
         .main-sticky-header {
@@ -156,13 +145,11 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ======== 1. 포트폴리오 그리드 뷰 ======== */
         .portfolio-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); 
             gap: 4rem 3rem; padding-top: 0.5rem;
         }
         
-        /* 로딩 메시지 스타일 */
         .loading-message { grid-column: 1 / -1; text-align: center; color: var(--text-gray); padding: 4rem 0; }
 
         .grid-item {
@@ -178,13 +165,11 @@
         .grid-item:hover .grid-img img { transform: scale(1.05); }
         .grid-title { font-size: 1.3rem; font-weight: 600; line-height: 1.3; color: var(--text-dark); margin-top: 0.5rem; }
 
-        /* ======== 2. 프로젝트 상세 뷰 ======== */
         .project-content { 
             display: flex; flex-direction: column; gap: 4rem; width: 100%; padding-top: 0.5rem; 
         }
         .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
-        /* ======== 3. CV (이력서/소개) 뷰 ======== */
         .cv-container { width: 100%; max-width: 1000px; padding-top: 1rem; } 
         
         .cv-header { margin-bottom: 4rem; text-align: left; }
@@ -198,18 +183,8 @@
             text-align: left;
         }
         
-        .cv-text { 
-            font-size: 1.1rem; color: #222; line-height: 1.8; 
-            text-align: center; 
-            font-weight: 400; 
-        }
-        
-        .cv-separator { 
-            margin: 2.5rem auto; 
-            width: 150px; 
-            height: 2px; 
-            background-color: var(--brand-color); 
-        }
+        .cv-text { font-size: 1.1rem; color: #222; line-height: 1.8; text-align: center; font-weight: 400; }
+        .cv-separator { margin: 2.5rem auto; width: 150px; height: 2px; background-color: var(--brand-color); }
         
         .tools-marquee-container {
             width: 100%; overflow: hidden; padding: 1.5rem 0; display: flex;
@@ -221,7 +196,6 @@
         .tools-marquee-item { padding: 0 2.5rem; font-size: 1.2rem; font-weight: 700; color: var(--text-dark); white-space: nowrap; letter-spacing: 1px; }
         @keyframes scroll-tools { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* ================= 상단 이동 버튼 ================= */
         .scroll-top-btn {
             position: fixed; bottom: 2rem; right: 3rem; z-index: 1500;
             width: 50px; height: 50px; border-radius: 50%;
@@ -234,7 +208,6 @@
         .scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         .scroll-top-btn:hover { filter: brightness(0.9); }
 
-        /* ================= 반응형 ================= */
         @media (max-width: 1024px) { 
             .main-content { padding: 0 0 4rem 3rem; } 
             .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 2rem; }
@@ -262,7 +235,6 @@
     <div class="cursor-dot" id="cursor-dot"></div>
     <button id="scrollTopBtn" class="scroll-top-btn interactable" onclick="scrollToTop()">↑</button>
 
-    <!-- 최상단 공지 배너 -->
     <div class="top-announcement-banner">
         <span>Discover my latest 3D projects and artworks</span>
         <a href="https://www.artstation.com/sennxe" target="_blank" class="top-announcement-link interactable">
@@ -271,8 +243,6 @@
     </div>
 
     <div class="layout-wrapper">
-        
-        <!-- 좌측 사이드바 -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="#" class="sidebar-logo interactable" onclick="goHome(event)">SENN</a>
@@ -284,67 +254,51 @@
             
             <div class="sidebar-section">
                 <div class="sidebar-title">Menu</div>
-                
                 <button class="sidebar-link interactable" id="cv-tab-btn" onclick="switchTab('cv', this)">CV</button>
-                
                 <div class="nav-accordion open" id="portfolio-accordion">
                     <button class="sidebar-link active interactable" id="portfolio-tab-btn" onclick="togglePortfolioAccordion(this)">
                         <span>Portfolio</span>
                         <span class="nav-arrow">▼</span>
                     </button>
-                    <!-- 자바스크립트가 여기에 서브메뉴를 자동 생성합니다 -->
                     <div class="sidebar-submenu" id="portfolio-submenu"></div>
                 </div>
             </div>
         </aside>
 
-        <!-- 우측 메인 콘텐츠 -->
         <main class="main-content">
-            
             <div class="content-inner">
-                
                 <div class="main-sticky-header">
                     <h1 id="main-page-title" class="page-title">Portfolio</h1>
                     <hr class="divider">
                     <button id="back-btn" class="back-btn interactable" onclick="goBackToPortfolio()" style="display: none;">— Back to Portfolio</button>
                 </div>
 
-                <!-- 뷰 1: 포트폴리오 그리드 (초기 화면) -->
                 <section id="view-portfolio" class="view-section active">
-                    <!-- 자바스크립트가 여기에 갤러리를 자동 생성합니다 -->
                     <div class="portfolio-grid" id="portfolio-grid-container">
                         <p class="loading-message">아트스테이션에서 데이터를 불러오는 중입니다...</p>
                     </div>
                 </section>
 
-                <!-- 뷰 2: 프로젝트 상세 보기 -->
                 <section id="view-project" class="view-section">
                     <div id="project-image-container" class="project-content"></div>
                 </section>
 
-                <!-- 뷰 3: CV 섹션 -->
                 <section id="view-cv" class="view-section">
                     <div class="cv-container">
-                        
-                        <!-- 이름, 역할 부분 (왼쪽 정렬 유지) -->
                         <div class="cv-header">
                             <h2 class="cv-name">Senn</h2>
                             <span class="cv-role">3D Modeler & Artist</span>
                         </div>
-                        
                         <div class="cv-section">
                             <h3 class="cv-section-title">ABOUT ME</h3>
                             <p class="cv-text">
                                 Born on January 20, 2002, in South Korea, Chae-yeon "SENN" Kim demonstrated an aptitude for mechanical engineering from a young age before majoring in 3D art and languages at university. Adept at creating both photorealistic and stylized visuals, SENN is especially passionate about producing 3D artwork centered around motorsports. Today, SENN's creative portfolio is driven by a core focus on 3D modeling, design, and game development.
                             </p>
-                            
                             <div class="cv-separator"></div>
-                            
                             <p class="cv-text">
                                 Chaeyeon "SENN" Kim은 2002년 1월 20일 대한민국에서 태어났습니다. 어린 시절부터 기계공학에 두각을 보였으며, 이후 대학에서 3D와 언어를 전공했습니다. 실사와 캐주얼 스타일을 모두 능숙하게 다루며, 특히 관심 분야인 모터스포츠를 중심으로 한 3D 아트워크 제작에 깊은 열정을 쏟고 있습니다. 현재는 3D 모델링, 디자인, 그리고 게임 개발을 주력으로 창작 포트폴리오를 확장해 나가고 있습니다.
                             </p>
                         </div>
-                        
                         <div class="cv-section">
                             <h3 class="cv-section-title">SOFTWARE & TOOLS</h3>
                             <div class="tools-marquee-container interactable">
@@ -374,15 +328,11 @@
                         </div>
                     </div>
                 </section>
-                
             </div>
         </main>
     </div>
 
     <script>
-        // --------------------------------------------------------
-        // 유틸리티 함수
-        // --------------------------------------------------------
         function copyEmail(event) {
             event.preventDefault();
             navigator.clipboard.writeText("sennxe@gmail.com").then(() => {
@@ -397,34 +347,25 @@
         });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-        // --------------------------------------------------------
-        // 커스텀 커서 로직
-        // --------------------------------------------------------
         const cursorDot = document.getElementById('cursor-dot');
         window.addEventListener('mousemove', (e) => {
             cursorDot.style.left = e.clientX + 'px';
             cursorDot.style.top = e.clientY + 'px';
         });
 
-        // 정적 요소에 커서 이벤트 달기
         document.querySelectorAll('.interactable, a, button, .tools-marquee-container').forEach((el) => {
             el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
         });
 
-        // 동적 요소용 커서 이벤트 달아주는 헬퍼 함수
         function addCursorHover(element) {
             element.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
             element.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
         }
 
-        // --------------------------------------------------------
-        // 아트스테이션 연동 로직 (새롭게 추가된 부분)
-        // --------------------------------------------------------
-        let dynamicProjectData = {}; // 데이터를 동적으로 담을 객체
+        let dynamicProjectData = {};
 
         function fetchArtStationData() {
-            // 1. rss2json API의 캐시를 우회하기 위해 매번 새로운 주소처럼 인식시킵니다.
             const randomString = Math.random().toString(36).substring(7);
             const rssUrl = `https://www.artstation.com/sennxe.rss?bust=${randomString}`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -435,45 +376,49 @@
                     const gridContainer = document.getElementById('portfolio-grid-container');
                     const submenuContainer = document.getElementById('portfolio-submenu');
                     
-                    gridContainer.innerHTML = ''; // '불러오는 중...' 메시지 삭제
-                    submenuContainer.innerHTML = ''; // 기존 서브메뉴 비우기
+                    gridContainer.innerHTML = ''; 
+                    submenuContainer.innerHTML = ''; 
                     
                     if (data.status === 'ok' && data.items.length > 0) {
                         data.items.forEach((item, index) => {
                             const projectId = 'project_' + index;
                             
-                            // 2. 아트스테이션이 제공하는 '공식 썸네일' 이미지를 최우선으로 확보합니다.
-                            let thumbnail = item.thumbnail || '';
+                            // 1. "by SENN" 및 불필요한 이름 꼬리표 완벽하게 잘라내기
+                            const cleanTitle = item.title.replace(/\s*by\s+SENN/i, '').trim();
                             
-                            // 3. 본문(Description)에서 이모지를 거르고 진짜 '작품 이미지'만 추출합니다.
+                            // 2. 피드에서 넘겨준 모든 텍스트(요약+본문)를 뒤져서 이미지 찾아내기
+                            const htmlContent = (item.content || '') + ' ' + (item.description || '');
                             const parser = new DOMParser();
-                            const doc = parser.parseFromString(item.description, 'text/html');
+                            const doc = parser.parseFromString(htmlContent, 'text/html');
                             const imgTags = doc.querySelectorAll('img');
                             
+                            // 3. 이모지 원천 차단 (artstation 도메인이 포함된 진짜 이미지만 허용)
                             let descImages = Array.from(imgTags)
                                 .map(img => img.src)
-                                .filter(src => src.includes('/assets/') || src.includes('/projects/')); // 이모지 필터링 핵심!
+                                .filter(src => src.includes('artstation.com') || src.includes('artstation.net'));
                             
-                            // 4. 상세 페이지용 이미지 목록 통합 (썸네일 + 본문 이미지 중복 제거)
+                            let thumbnail = item.thumbnail || '';
                             let allImages = [];
-                            if (thumbnail) allImages.push(thumbnail);
+                            
+                            if (thumbnail && (thumbnail.includes('artstation.com') || thumbnail.includes('artstation.net'))) {
+                                allImages.push(thumbnail);
+                            }
+                            
+                            // 중복 이미지 제거 후 합치기 (최대한 많은 이미지 확보)
                             allImages = [...new Set([...allImages, ...descImages])]; 
                             
-                            // 5. 그리드에 보여줄 메인 이미지 (썸네일이 없으면 본문 첫 번째 이미지 사용)
-                            let mainImage = thumbnail || (descImages.length > 0 ? descImages[0] : null);
+                            let mainImage = allImages.length > 0 ? allImages[0] : null;
                             
-                            // 유효한 이미지가 있는 작품만 화면에 렌더링합니다.
                             if (mainImage) {
                                 dynamicProjectData[projectId] = {
-                                    title: item.title,
-                                    images: allImages.length > 0 ? allImages : [mainImage]
+                                    title: cleanTitle,
+                                    images: allImages 
                                 };
                                 
-                                // 사이드바 서브메뉴 버튼 생성
                                 const btn = document.createElement('button');
                                 btn.className = 'submenu-link interactable';
                                 btn.id = 'submenu-btn-' + projectId;
-                                btn.innerText = item.title;
+                                btn.innerText = cleanTitle;
                                 btn.onclick = (e) => {
                                     e.stopPropagation();
                                     openProject(projectId, btn);
@@ -481,21 +426,20 @@
                                 addCursorHover(btn);
                                 submenuContainer.appendChild(btn);
                                 
-                                // 메인 갤러리 그리드 아이템 생성
                                 const article = document.createElement('article');
                                 article.className = 'grid-item interactable';
                                 article.onclick = () => openProject(projectId, btn);
                                 addCursorHover(article);
                                 
                                 article.innerHTML = `
-                                    <div class="grid-img"><img src="${mainImage}" alt="${item.title}"></div>
-                                    <h3 class="grid-title">${item.title}</h3>
+                                    <div class="grid-img"><img src="${mainImage}" alt="${cleanTitle}"></div>
+                                    <h3 class="grid-title">${cleanTitle}</h3>
                                 `;
                                 gridContainer.appendChild(article);
                             }
                         });
                         
-                        initObserver(); // 애니메이션 재실행
+                        initObserver(); 
                     } else {
                         gridContainer.innerHTML = '<p class="loading-message">작품을 불러오지 못했습니다.</p>';
                     }
@@ -503,13 +447,10 @@
                 .catch(error => {
                     console.error('RSS Fetch Error:', error);
                     document.getElementById('portfolio-grid-container').innerHTML = 
-                        '<p class="loading-message">네트워크 오류로 아트스테이션과 연결할 수 없습니다.</p>';
+                        '<p class="loading-message">네트워크 오류로 연결할 수 없습니다.</p>';
                 });
         }
 
-        // --------------------------------------------------------
-        // 네비게이션 및 뷰 컨트롤 로직
-        // --------------------------------------------------------
         function togglePortfolioAccordion(btn) {
             const accordion = document.getElementById('portfolio-accordion');
             const isOpen = accordion.classList.contains('open');
@@ -522,7 +463,7 @@
 
         function openProject(projectId, clickedSubmenuBtn) {
             const container = document.getElementById('project-image-container');
-            const currentData = dynamicProjectData[projectId]; // 동적 데이터 사용
+            const currentData = dynamicProjectData[projectId]; 
             
             container.innerHTML = ''; 
             currentData.images.forEach(src => {
@@ -607,11 +548,7 @@
             document.querySelectorAll('.grid-item').forEach(item => observer.observe(item));
         }
 
-        // --------------------------------------------------------
-        // 초기화 실행
-        // --------------------------------------------------------
         document.addEventListener("DOMContentLoaded", () => {
-            // 하드코딩된 서브메뉴 대신 아트스테이션에서 데이터를 긁어와 모든 걸 구성합니다.
             fetchArtStationData();
         });
     </script>
