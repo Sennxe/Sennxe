@@ -13,7 +13,6 @@
     <script src="data.js"></script>
 
     <style>
-        /* 기본 설정 */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comfortaa', 'Noto Sans KR', sans-serif; }
         body { background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; overflow-y: scroll; line-height: 1.6; padding-top: 40px; }
         body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: none !important; }
@@ -29,12 +28,17 @@
 
         :root { --brand-color: #aec5e8; --brand-color-light: #e8f0f8; --text-dark: #1a1a1a; --text-gray: #666; --border-color: #dcdace; }
 
+        /* 배너 및 햄버거 메뉴 세팅 */
         .top-announcement-banner { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: #eeebe0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; color: var(--text-gray); text-transform: uppercase; z-index: 3000; }
         .top-announcement-link { color: #5a82b5; margin-left: 1.5rem; text-decoration: none; transition: color 0.2s ease; display: inline-flex; align-items: center; gap: 0.3rem; }
         .top-announcement-link:hover { color: var(--text-dark); }
+        
+        .hamburger-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-gray); position: absolute; left: 15px; top: 50%; transform: translateY(-50%); z-index: 3100; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 2400; opacity: 0; transition: opacity 0.3s; }
+        .sidebar-overlay.open { display: block; opacity: 1; }
 
         .layout-wrapper { display: flex; min-height: calc(100vh - 40px); width: 92%; max-width: 1600px; margin: 0 auto; padding: 0 1rem; }
-        .sidebar { width: 280px; background-color: transparent; border-right: 1px solid var(--border-color); position: sticky; top: 40px; height: calc(100vh - 40px); padding: 3rem 2rem 3rem 0; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar { width: 280px; background-color: transparent; border-right: 1px solid var(--border-color); position: sticky; top: 40px; height: calc(100vh - 40px); padding: 3rem 2rem 3rem 0; display: flex; flex-direction: column; overflow-y: auto; z-index: 2500; }
         .sidebar-header { margin-bottom: 3.5rem; padding-left: 0.5rem; }
         .sidebar-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; color: var(--text-dark); text-decoration: none; margin-bottom: 0.8rem; display: block; }
         .sidebar-sns-horizontal { display: flex; gap: 1rem; align-items: center; }
@@ -77,6 +81,10 @@
         .project-content { display: flex; flex-direction: column; gap: 4rem; width: 100%; padding-top: 0.5rem; }
         .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
+        /* 유튜브 임베드 박스 스타일 */
+        .youtube-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .youtube-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
         .cv-container { width: 100%; max-width: 1000px; padding-top: 1rem; } 
         .cv-header { margin-bottom: 4rem; text-align: left; }
         .cv-name { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -1px; }
@@ -95,11 +103,30 @@
         .scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         .scroll-top-btn:hover { filter: brightness(0.9); }
 
+        /* ================= 반응형 (모바일 햄버거 메뉴 포함) ================= */
         @media (max-width: 1024px) { 
-            .main-content { padding: 0 0 4rem 3rem; } .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 2rem; } .top-announcement-banner { text-align: center; flex-direction: column; gap: 0.2rem; height: auto; padding: 0.5rem; } body { padding-top: 50px; } .sidebar, .main-sticky-header { top: 50px; } .top-announcement-link { margin-left: 0; }
+            .main-content { padding: 0 0 4rem 3rem; } .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 2rem; }
         }
         @media (max-width: 768px) {
-            .layout-wrapper { flex-direction: column; padding: 0; width: 100%; } .sidebar { width: 100%; height: auto; position: relative; padding: 2rem 1.5rem; border-right: none; border-bottom: 1px solid var(--border-color); top: 0; } .sidebar-header { margin-bottom: 1.5rem; padding-left: 0; } .sidebar-section { margin-bottom: 0; } .main-content { padding: 0 1.5rem 2rem 1.5rem; } .main-sticky-header { padding-top: 1rem; } .page-title { font-size: 2.5rem; margin-bottom: 0.5rem; } .portfolio-grid { grid-template-columns: 1fr; padding-top: 1rem; } .cv-name { font-size: 2.5rem; } .scroll-top-btn { bottom: 1.5rem; right: 1.5rem; width: 45px; height: 45px; }
+            .hamburger-btn { display: block; }
+            .top-announcement-banner { justify-content: flex-end; padding-right: 1.5rem; }
+            .top-announcement-banner span { display: none; } /* 모바일에선 배너 텍스트 숨김 */
+            
+            body { padding-top: 40px; }
+            .layout-wrapper { flex-direction: column; padding: 0; width: 100%; } 
+            
+            /* 햄버거 사이드바 스타일 */
+            .sidebar { position: fixed; top: 0; left: -100%; width: 280px; height: 100vh; padding: 3rem 1.5rem; background: #f6f5ef; border-right: 1px solid var(--border-color); transition: left 0.3s ease; z-index: 2500; }
+            .sidebar.open { left: 0; }
+            
+            .sidebar-header { margin-bottom: 1.5rem; padding-left: 0; } 
+            .sidebar-section { margin-bottom: 0; } 
+            .main-content { padding: 0 1.5rem 2rem 1.5rem; width: 100%; } 
+            .main-sticky-header { padding-top: 1rem; top: 40px; } 
+            .page-title { font-size: 2.5rem; margin-bottom: 0.5rem; } 
+            .portfolio-grid { grid-template-columns: 1fr; padding-top: 1rem; } 
+            .cv-name { font-size: 2.5rem; } 
+            .scroll-top-btn { bottom: 1.5rem; right: 1.5rem; width: 45px; height: 45px; }
         }
     </style>
 </head>
@@ -108,12 +135,17 @@
     <div class="cursor-dot" id="cursor-dot"></div>
     <button id="scrollTopBtn" class="scroll-top-btn interactable" onclick="scrollToTop()">↑</button>
 
+    <!-- 상단 배너 (모바일에선 햄버거 버튼 등장) -->
     <div class="top-announcement-banner">
+        <button id="hamburger-btn" class="hamburger-btn interactable" onclick="toggleMobileMenu()">☰</button>
         <span>Discover my latest 3D projects and artworks</span>
         <a href="https://www.artstation.com/sennxe" target="_blank" class="top-announcement-link interactable">
             Visit ArtStation ↗
         </a>
     </div>
+    
+    <!-- 모바일 사이드바 열릴 때 배경 어두워지는 오버레이 -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileMenu(true)"></div>
 
     <div class="layout-wrapper">
         <aside class="sidebar">
@@ -148,12 +180,10 @@
                 </div>
 
                 <section id="view-portfolio" class="view-section active">
-                    <!-- 자동 생성될 메인 갤러리 -->
                     <div class="portfolio-grid" id="portfolio-grid-container"></div>
                 </section>
 
                 <section id="view-project" class="view-section">
-                    <!-- 상세 스크롤 이미지 -->
                     <div id="project-image-container" class="project-content"></div>
                 </section>
 
@@ -204,20 +234,38 @@
             element.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
         }
 
-        // --- 파이썬이 만들어준 data.js 데이터를 화면에 뿌리는 로직 ---
+        // 모바일 햄버거 메뉴 열기/닫기
+        function toggleMobileMenu(forceClose = false) {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (forceClose || sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                sidebar.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        // 유튜브 링크에서 ID만 쏙 뽑아오는 함수
+        function extractYouTubeID(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
         function loadLocalProjects() {
             const gridContainer = document.getElementById('portfolio-grid-container');
             const submenuContainer = document.getElementById('portfolio-submenu');
             gridContainer.innerHTML = ''; submenuContainer.innerHTML = ''; 
 
-            // projectData는 파이썬이 만든 data.js 파일에서 불러옵니다.
             if(typeof projectData !== 'undefined' && Object.keys(projectData).length > 0) {
                 Object.keys(projectData).forEach(key => {
                     const data = projectData[key];
                     const cleanTitle = data.title;
-                    const mainImage = data.images[0]; // 폴더 안의 첫 번째 이미지를 썸네일로 사용
+                    const mainImage = data.images[0]; 
 
-                    // 사이드바 버튼
                     const btn = document.createElement('button');
                     btn.className = 'submenu-link interactable';
                     btn.id = 'submenu-btn-' + key;
@@ -226,7 +274,6 @@
                     addCursorHover(btn);
                     submenuContainer.appendChild(btn);
                     
-                    // 갤러리 이미지
                     const article = document.createElement('article');
                     article.className = 'grid-item interactable';
                     article.onclick = () => openProject(key, btn);
@@ -252,6 +299,27 @@
             const currentData = projectData[projectId]; 
             
             container.innerHTML = ''; 
+            
+            // ★ 상세 뷰 첫 장에 유튜브 영상 띄우기 (데이터가 있을 때만)
+            if (currentData.youtube) {
+                const ytId = extractYouTubeID(currentData.youtube);
+                if (ytId) {
+                    const iframeWrapper = document.createElement('div');
+                    iframeWrapper.className = 'youtube-wrapper interactable';
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://www.youtube.com/embed/${ytId}`;
+                    iframe.frameBorder = "0";
+                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                    iframe.allowFullscreen = true;
+                    
+                    iframeWrapper.appendChild(iframe);
+                    addCursorHover(iframeWrapper);
+                    container.appendChild(iframeWrapper);
+                }
+            }
+
+            // 나머지 이미지들 순서대로 삽입
             currentData.images.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
@@ -273,6 +341,10 @@
                 document.getElementById('portfolio-accordion').classList.add('open');
             }
             if(clickedSubmenuBtn) clickedSubmenuBtn.classList.add('active');
+            
+            // 모바일에서 클릭 시 자동으로 햄버거 메뉴 닫히게 처리
+            if (window.innerWidth <= 768) { toggleMobileMenu(true); }
+            
             scrollToTop();
         }
 
@@ -296,6 +368,8 @@
                 items.forEach(item => item.classList.remove('visible'));
                 setTimeout(initObserver, 50);
             }
+            
+            if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             scrollToTop();
         }
 
@@ -305,6 +379,7 @@
             if (!pfBtn.classList.contains('active') || document.getElementById('view-project').classList.contains('active')) {
                 switchTab('portfolio', pfBtn);
             }
+            if (window.innerWidth <= 768) { toggleMobileMenu(true); }
         }
 
         let observer;
@@ -325,7 +400,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            loadLocalProjects(); // 웹페이지 켜질 때 로컬 데이터 불러오기
+            loadLocalProjects(); 
         });
     </script>
 </body>

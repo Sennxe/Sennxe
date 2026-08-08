@@ -8,13 +8,15 @@ const projectData = {
             "Projects/01_Saki/Saki_KimChae-yeon3.png",
             "Projects/01_Saki/Saki_KimChae-yeon4.png",
             "Projects/01_Saki/Saki_KimChae-yeon5.png"
-        ]
+        ],
+        "youtube": ""
     },
     "02_Dhalia": {
         "title": "Dhalia",
         "images": [
             "Projects/02_Dhalia/스크린샷 2026-08-08 203003.png"
-        ]
+        ],
+        "youtube": ""
     },
     "03_Wriothesley": {
         "title": "Wriothesley",
@@ -24,7 +26,8 @@ const projectData = {
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon2.png",
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon3.png",
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon4.png"
-        ]
+        ],
+        "youtube": ""
     },
     "04_Post Dochi (Vtuber)": {
         "title": "Post Dochi (Vtuber)",
@@ -39,6 +42,7 @@ const projectData = {
             "Projects/04_Post Dochi (Vtuber)/Vtuber_KimChae-yeon (7).png",
             "Projects/04_Post Dochi (Vtuber)/Vtuber_KimChae-yeon (8).png",
             "Projects/04_Post Dochi (Vtuber)/Vtuber_KimChae-yeon (9).png"
-        ]
+        ],
+        "youtube": "https://www.youtube.com/watch?v=Xu7oVEqaouE&list=PLcl_lgdUTOv4"
     }
 };
