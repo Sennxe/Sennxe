@@ -11,12 +11,17 @@ const projectData = {
         ],
         "youtube": ""
     },
-    "02_Dhalia": {
-        "title": "Dhalia",
+    "02_Dahlia": {
+        "title": "Dahlia",
         "images": [
-            "Projects/02_Dhalia/스크린샷 2026-08-08 203003.png"
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon0.png",
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon1.png",
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon2.png",
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon3.png",
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon4.png",
+            "Projects/02_Dahlia/Dahlia_KimChae-yeon5.png"
         ],
-        "youtube": ""
+        "youtube": "https://youtube.com/shorts/ZX4gPeALiGs?feature=share"
     },
     "03_Wriothesley": {
         "title": "Wriothesley",
@@ -24,7 +29,6 @@ const projectData = {
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon0.png",
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon1.png",
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon2.png",
-            "Projects/03_Wriothesley/Wriothesley_KimChae-yeon3.png",
             "Projects/03_Wriothesley/Wriothesley_KimChae-yeon4.png"
         ],
         "youtube": ""
