@@ -21,7 +21,7 @@ const projectData = {
             "Projects/02_Dahlia/Dahlia_KimChae-yeon4.png",
             "Projects/02_Dahlia/Dahlia_KimChae-yeon5.png"
         ],
-        "youtube": "https://youtube.com/shorts/ZX4gPeALiGs?feature=share"
+        "youtube": "https://www.youtube.com/watch?v=ZX4gPeALiGs&list=PLcl_lgdUTOv4&index=2"
     },
     "03_Wriothesley": {
         "title": "Wriothesley",
