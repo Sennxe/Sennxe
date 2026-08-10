@@ -13,6 +13,20 @@
     <script src="data.js"></script>
 
     <style>
+        /* 새로 추가할 아이콘 크기 조절 스타일 */
+        .sns-custom-icon {
+            width: 22px; /* 원하는 크기에 맞게 숫자를 줄이거나 키워보세요! */
+            height: 22px;
+            object-fit: contain; /* 이미지가 찌그러지지 않게 보호 */
+            display: block;
+            transition: filter 0.2s ease;
+        }
+
+        /* 마우스를 올렸을 때 색상이 살짝 연해지는 효과 (선택 사항) */
+        .sns-link:hover .sns-custom-icon {
+            filter: opacity(0.7);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comfortaa', 'Noto Sans KR', sans-serif; }
         body { background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; overflow-y: scroll; line-height: 1.6; padding-top: 40px; }
         body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: none !important; }
@@ -154,8 +168,8 @@
                 <div class="sidebar-sns-horizontal">
                     <a href="#" class="sns-link interactable" title="Email Copy" onclick="copyEmail(event)">📧</a>
                     <a href="https://www.artstation.com/sennxe" target="_blank" class="sns-link interactable" title="ArtStation">
-        <img src="artstation.png" alt="ArtStation" class="sns-custom-icon">
-    </a>
+                        <img src="artstation.png" alt="ArtStation" class="sns-custom-icon">
+                    </a>
                 </div>
             </div>
             
@@ -296,13 +310,14 @@
             switchTab('portfolio', btn, true);
         }
 
-        function openProject(projectId, clickedSubmenuBtn) {
+        // ★ [추가] 브라우저 기록(History)을 남기는 로직이 추가되었습니다 (isHistoryBack 파라미터 추가)
+        function openProject(projectId, clickedSubmenuBtn, isHistoryBack = false) {
             const container = document.getElementById('project-image-container');
             const currentData = projectData[projectId]; 
             
             container.innerHTML = ''; 
             
-            // ★ 상세 뷰 첫 장에 유튜브 영상 띄우기 (데이터가 있을 때만)
+            // 상세 뷰 첫 장에 유튜브 영상 띄우기 (데이터가 있을 때만)
             if (currentData.youtube) {
                 const ytId = extractYouTubeID(currentData.youtube);
                 if (ytId) {
@@ -347,12 +362,21 @@
             // 모바일에서 클릭 시 자동으로 햄버거 메뉴 닫히게 처리
             if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             
+            // ★ [핵심] 사용자가 직접 클릭해서 들어왔다면 브라우저 주소창에 기록을 남깁니다.
+            if(!isHistoryBack) {
+                history.pushState({ view: 'project', id: projectId }, '', '#' + projectId);
+            }
+            
             scrollToTop();
         }
 
-        function goBackToPortfolio() { const portfolioBtn = document.getElementById('portfolio-tab-btn'); switchTab('portfolio', portfolioBtn); }
+        function goBackToPortfolio() { 
+            const portfolioBtn = document.getElementById('portfolio-tab-btn'); 
+            switchTab('portfolio', portfolioBtn); 
+        }
 
-        function switchTab(tabId, clickedBtn, skipAccordionState = false) {
+        // ★ [추가] 브라우저 기록(History)을 남기는 로직이 추가되었습니다 (isHistoryBack 파라미터 추가)
+        function switchTab(tabId, clickedBtn, skipAccordionState = false, isHistoryBack = false) {
             document.querySelectorAll('.sidebar-link, .submenu-link').forEach(btn => btn.classList.remove('active'));
             if(clickedBtn) clickedBtn.classList.add('active');
             
@@ -371,6 +395,11 @@
                 setTimeout(initObserver, 50);
             }
             
+            // ★ [핵심] 사용자가 직접 탭을 클릭해서 이동했다면 브라우저 주소창에 기록을 남깁니다.
+            if(!isHistoryBack) {
+                history.pushState({ view: tabId }, '', '#' + tabId);
+            }
+
             if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             scrollToTop();
         }
@@ -401,8 +430,40 @@
             document.querySelectorAll('.grid-item').forEach(item => observer.observe(item));
         }
 
+        // ★ 마우스 뒤로 가기 / 앞으로 가기 버튼 감지
+        window.addEventListener('popstate', (event) => {
+            const state = event.state;
+            if (state) {
+                if (state.view === 'project') {
+                    // 뒤로 가기를 눌렀는데 '작품' 페이지인 경우
+                    const btn = document.getElementById('submenu-btn-' + state.id);
+                    openProject(state.id, btn, true); // true = 기록을 또 남기지 마!
+                } else {
+                    // 뒤로 가기를 눌렀는데 '메인 갤러리'나 'CV' 탭인 경우
+                    const btn = document.getElementById(state.view + '-tab-btn');
+                    switchTab(state.view, btn, false, true); 
+                }
+            } else {
+                // 맨 처음으로 돌아왔을 때의 기본값
+                const btn = document.getElementById('portfolio-tab-btn');
+                switchTab('portfolio', btn, false, true);
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
             loadLocalProjects(); 
+            
+            // ★ [추가] 처음 웹페이지가 열릴 때의 상태 저장 및 URL에 링크가 있으면 바로 이동!
+            const hash = window.location.hash.replace('#', '');
+            if (hash === 'cv') {
+                switchTab('cv', document.getElementById('cv-tab-btn'), false, true);
+                history.replaceState({ view: 'cv' }, '', '#cv');
+            } else if (hash && projectData[hash]) {
+                openProject(hash, document.getElementById('submenu-btn-' + hash), true);
+                history.replaceState({ view: 'project', id: hash }, '', '#' + hash);
+            } else {
+                history.replaceState({ view: 'portfolio' }, '', '#portfolio');
+            }
         });
     </script>
 </body>
