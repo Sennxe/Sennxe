@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    <!-- 💡 진짜 데이터를 불러옵니다! -->
+    <!-- 파이썬이 만들어준 진짜 데이터를 불러옵니다 -->
     <script src="data.js"></script>
 
     <style>
@@ -37,7 +37,6 @@
         .sidebar { width: 280px; background-color: transparent; border-right: 1px solid var(--border-color); position: sticky; top: 40px; height: calc(100vh - 40px); padding: 3rem 2rem 3rem 0; display: flex; flex-direction: column; overflow-y: auto; z-index: 2500; }
         .sidebar-header { margin-bottom: 3.5rem; padding-left: 0.5rem; }
         
-        /* 로고 + 텍스트 묶음 */
         .sidebar-logo-wrap { display: flex; flex-direction: column; gap: 0.5rem; text-decoration: none; margin-bottom: 0.8rem; }
         .sidebar-brand-icon { width: 38px; height: 38px; object-fit: contain; }
         .sidebar-logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; color: var(--text-dark); }
@@ -88,8 +87,12 @@
         .grid-item:hover .grid-img img { transform: scale(1.05); }
         .grid-title { font-size: 1.3rem; font-weight: 600; line-height: 1.3; color: var(--text-dark); margin-top: 0.5rem; }
         
-        .project-content { display: flex; flex-direction: column; gap: 4rem; width: 100%; padding-top: 0.5rem; }
-        .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        /* 💡 수정됨: 이미지 사이의 상하 간격을 4rem에서 2rem으로 절반 축소! */
+        .project-content { display: flex; flex-direction: column; gap: 2rem; width: 100%; padding-top: 0.5rem; }
+        .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        /* 프로젝트 이미지를 클릭할 수 있음을 나타내는 효과 (선택사항) */
+        .project-content img:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+
         .youtube-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .youtube-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
@@ -111,6 +114,14 @@
         .scroll-top-btn { position: fixed; bottom: 2rem; right: 3rem; z-index: 1500; width: 50px; height: 50px; border-radius: 50%; background-color: var(--brand-color); color: #fff; border: none; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(174, 197, 232, 0.5); }
         .scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         .scroll-top-btn:hover { filter: brightness(0.9); }
+
+        /* 💡 새로 추가된 기능: 이미지 확대(라이트박스) 스타일 */
+        .lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(246, 245, 239, 0.95); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .lightbox.active { opacity: 1; visibility: visible; }
+        .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); object-fit: contain; transform: scale(0.95); transition: transform 0.3s ease; }
+        .lightbox.active img { transform: scale(1); }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; background: none; border: none; font-size: 2rem; color: var(--text-dark); font-weight: 300; transition: transform 0.2s; }
+        .lightbox-close:hover { transform: scale(1.2); }
         
         @media (max-width: 1024px) { 
             .main-content { padding: 0 0 4rem 3rem; } .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
@@ -131,6 +142,7 @@
             .portfolio-grid { grid-template-columns: 1fr; padding-top: 1rem; } 
             .cv-name { font-size: 2.5rem; } 
             .scroll-top-btn { bottom: 1.5rem; right: 1.5rem; width: 45px; height: 45px; }
+            .lightbox-close { top: 15px; right: 20px; font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -138,6 +150,12 @@
 
     <div class="cursor-dot" id="cursor-dot"></div>
     <button id="scrollTopBtn" class="scroll-top-btn interactable" onclick="scrollToTop()">↑</button>
+
+    <!-- 💡 추가됨: 이미지 클릭 시 확대해서 보여줄 투명한 배경 창 (라이트박스) -->
+    <div id="lightbox" class="lightbox interactable" onclick="closeLightbox(event)">
+        <button class="lightbox-close interactable" onclick="closeLightbox(event)">✕</button>
+        <img id="lightbox-img" src="" alt="Zoomed Image" class="interactable" onclick="event.stopPropagation()">
+    </div>
 
     <div class="top-announcement-banner">
         <button id="hamburger-btn" class="hamburger-btn interactable" onclick="toggleMobileMenu()">☰</button>
@@ -152,7 +170,6 @@
     <div class="layout-wrapper">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <!-- 💡 메인 로고 영역 (클릭 시 홈으로 이동) -->
                 <a href="#" class="sidebar-logo-wrap interactable" onclick="goHome(event)">
                     <img src="favicon.png" alt="SENN Logo" class="sidebar-brand-icon">
                     <span class="sidebar-logo-text">SENN</span>
@@ -196,7 +213,6 @@
                     <button id="back-btn" class="back-btn interactable" onclick="goBackToHome()" style="display: none;">— Back</button>
                 </div>
 
-                <!-- 메인 홈 화면 -->
                 <section id="view-home" class="view-section active">
                     <div class="home-section-header">
                         <h2 class="home-section-title">Motor Sports</h2>
@@ -259,7 +275,6 @@
     </div>
 
     <script>
-        // 💡 모든 통합 데이터를 관리하는 객체
         let allProjectData = {};
 
         function copyEmail(event) { event.preventDefault(); navigator.clipboard.writeText("sennxe@gmail.com").then(() => { alert("이메일 주소가 복사되었습니다: sennxe@gmail.com"); }); }
@@ -298,7 +313,9 @@
             
             gridContainer.innerHTML = ''; submenuContainer.innerHTML = ''; homeGridContainer.innerHTML = '';
             
-            const keys = Object.keys(categoryData).reverse();
+            // 💡 수정됨: 알파벳/숫자 순서(01, 02, 03)대로 정상 출력되도록 reverse()를 삭제했습니다!
+            const keys = Object.keys(categoryData);
+            const total = keys.length;
             
             let count = 0;
             keys.forEach(key => {
@@ -323,15 +340,17 @@
                     return article;
                 };
 
+                // 전체보기 갤러리에는 모두 순서대로 다 넣습니다.
                 gridContainer.appendChild(createArticle());
 
-                if (count < 6) {
+                // 💡 수정됨: 홈 화면에는 뒤에서부터 6개(최신작 6개)까지만 넣습니다. 
+                // 가장 번호가 빠른(오래된) 작품은 알아서 화면 밖으로 탈락합니다.
+                if (count >= total - 6) {
                     homeGridContainer.appendChild(createArticle());
                 }
                 count++;
             });
 
-            // 데이터가 아예 없을 경우 빈 화면 표시
             if (keys.length === 0) {
                 gridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #aaa; padding: 2rem 0;">업로드된 프로젝트가 없습니다.</p>';
                 homeGridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #aaa; padding: 2rem 0;">업로드된 프로젝트가 없습니다.</p>';
@@ -339,7 +358,6 @@
         }
 
         function loadLocalProjects() {
-            // 진짜 data.js 파일에서 불러옵니다.
             if (typeof motorSportsData !== 'undefined') {
                 renderCategory(motorSportsData, 'motorsports');
                 Object.assign(allProjectData, motorSportsData);
@@ -367,6 +385,23 @@
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // 💡 새로 추가된 기능: 사진 클릭 시 화면 확대 (라이트박스 켜기)
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = src;
+            lightbox.classList.add('active');
+            history.pushState({ view: 'lightbox' }, '', '#lightbox');
+        }
+
+        // 라이트박스 닫기 (X 버튼이나 여백 클릭 시)
+        function closeLightbox(e) {
+            if(e) e.stopPropagation();
+            const lightbox = document.getElementById('lightbox');
+            if(lightbox.classList.contains('active')) {
+                history.back(); // 뒤로가기를 실행해서 자연스럽게 popstate 이벤트를 유도합니다.
+            }
         }
 
         function openProject(projectId, categoryId, clickedSubmenuBtn, isHistoryBack = false) {
@@ -397,6 +432,8 @@
                 const img = document.createElement('img');
                 img.src = src;
                 img.classList.add('interactable');
+                // 💡 추가됨: 이미지 클릭 시 확대 기능 연결!
+                img.onclick = () => openLightbox(src);
                 addCursorHover(img);
                 container.appendChild(img);
             });
@@ -491,10 +528,22 @@
             document.querySelectorAll('.grid-item').forEach(item => observer.observe(item));
         }
 
+        // 💡 수정됨: 라이트박스가 켜져 있을 때 뒤로 가기를 누르면 라이트박스만 꺼지도록 조치
         window.addEventListener('popstate', (event) => {
             const state = event.state;
+            
+            const lightbox = document.getElementById('lightbox');
+            const wasLightboxOpen = lightbox.classList.contains('active');
+            if (wasLightboxOpen) { lightbox.classList.remove('active'); }
+
             if (state) {
-                if (state.view === 'project') {
+                if (state.view === 'lightbox') {
+                    lightbox.classList.add('active');
+                } else if (state.view === 'project') {
+                    // 라이트박스를 방금 껐고, 현재 화면이 이미 프로젝트 화면이라면 재랜더링(스크롤 초기화)을 방지합니다.
+                    if (wasLightboxOpen && document.getElementById('view-project').classList.contains('active')) {
+                        return; 
+                    }
                     const btn = document.getElementById('submenu-btn-' + state.id);
                     openProject(state.id, state.cat, btn, true);
                 } else if (state.view === 'home') {
