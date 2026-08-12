@@ -87,10 +87,8 @@
         .grid-item:hover .grid-img img { transform: scale(1.05); }
         .grid-title { font-size: 1.3rem; font-weight: 600; line-height: 1.3; color: var(--text-dark); margin-top: 0.5rem; }
         
-        /* 💡 수정됨: 이미지 사이의 상하 간격을 4rem에서 2rem으로 절반 축소! */
         .project-content { display: flex; flex-direction: column; gap: 2rem; width: 100%; padding-top: 0.5rem; }
         .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        /* 프로젝트 이미지를 클릭할 수 있음을 나타내는 효과 (선택사항) */
         .project-content img:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
         .youtube-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
@@ -115,7 +113,6 @@
         .scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         .scroll-top-btn:hover { filter: brightness(0.9); }
 
-        /* 💡 새로 추가된 기능: 이미지 확대(라이트박스) 스타일 */
         .lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(246, 245, 239, 0.95); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .lightbox.active { opacity: 1; visibility: visible; }
         .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); object-fit: contain; transform: scale(0.95); transition: transform 0.3s ease; }
@@ -151,7 +148,6 @@
     <div class="cursor-dot" id="cursor-dot"></div>
     <button id="scrollTopBtn" class="scroll-top-btn interactable" onclick="scrollToTop()">↑</button>
 
-    <!-- 💡 추가됨: 이미지 클릭 시 확대해서 보여줄 투명한 배경 창 (라이트박스) -->
     <div id="lightbox" class="lightbox interactable" onclick="closeLightbox(event)">
         <button class="lightbox-close interactable" onclick="closeLightbox(event)">✕</button>
         <img id="lightbox-img" src="" alt="Zoomed Image" class="interactable" onclick="event.stopPropagation()">
@@ -313,7 +309,6 @@
             
             gridContainer.innerHTML = ''; submenuContainer.innerHTML = ''; homeGridContainer.innerHTML = '';
             
-            // 💡 수정됨: 알파벳/숫자 순서(01, 02, 03)대로 정상 출력되도록 reverse()를 삭제했습니다!
             const keys = Object.keys(categoryData);
             const total = keys.length;
             
@@ -340,11 +335,8 @@
                     return article;
                 };
 
-                // 전체보기 갤러리에는 모두 순서대로 다 넣습니다.
                 gridContainer.appendChild(createArticle());
 
-                // 💡 수정됨: 홈 화면에는 뒤에서부터 6개(최신작 6개)까지만 넣습니다. 
-                // 가장 번호가 빠른(오래된) 작품은 알아서 화면 밖으로 탈락합니다.
                 if (count >= total - 6) {
                     homeGridContainer.appendChild(createArticle());
                 }
@@ -387,7 +379,6 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // 💡 새로 추가된 기능: 사진 클릭 시 화면 확대 (라이트박스 켜기)
         function openLightbox(src) {
             const lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = src;
@@ -395,12 +386,11 @@
             history.pushState({ view: 'lightbox' }, '', '#lightbox');
         }
 
-        // 라이트박스 닫기 (X 버튼이나 여백 클릭 시)
         function closeLightbox(e) {
             if(e) e.stopPropagation();
             const lightbox = document.getElementById('lightbox');
             if(lightbox.classList.contains('active')) {
-                history.back(); // 뒤로가기를 실행해서 자연스럽게 popstate 이벤트를 유도합니다.
+                history.back(); 
             }
         }
 
@@ -432,7 +422,6 @@
                 const img = document.createElement('img');
                 img.src = src;
                 img.classList.add('interactable');
-                // 💡 추가됨: 이미지 클릭 시 확대 기능 연결!
                 img.onclick = () => openLightbox(src);
                 addCursorHover(img);
                 container.appendChild(img);
@@ -500,7 +489,15 @@
                 setTimeout(initObserver, 50);
             }
             
-            if(!isHistoryBack) { history.pushState({ view: tabId }, '', '#' + tabId); }
+            // 💡 수정됨: #home 해시태그 원천 차단!
+            if(!isHistoryBack) { 
+                if (tabId === 'home') {
+                    history.pushState({ view: 'home' }, '', window.location.pathname);
+                } else {
+                    history.pushState({ view: tabId }, '', '#' + tabId); 
+                }
+            }
+            
             if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             scrollToTop();
         }
@@ -528,7 +525,6 @@
             document.querySelectorAll('.grid-item').forEach(item => observer.observe(item));
         }
 
-        // 💡 수정됨: 라이트박스가 켜져 있을 때 뒤로 가기를 누르면 라이트박스만 꺼지도록 조치
         window.addEventListener('popstate', (event) => {
             const state = event.state;
             
@@ -540,7 +536,6 @@
                 if (state.view === 'lightbox') {
                     lightbox.classList.add('active');
                 } else if (state.view === 'project') {
-                    // 라이트박스를 방금 껐고, 현재 화면이 이미 프로젝트 화면이라면 재랜더링(스크롤 초기화)을 방지합니다.
                     if (wasLightboxOpen && document.getElementById('view-project').classList.contains('active')) {
                         return; 
                     }
@@ -569,8 +564,9 @@
                 openProject(hash, cat, document.getElementById('submenu-btn-' + hash), true);
                 history.replaceState({ view: 'project', id: hash, cat: cat }, '', '#' + hash);
             } else {
+                // 💡 수정됨: 최초 접속 시 주소창을 깔끔하게 유지합니다.
                 switchTab('home', null, false, true);
-                history.replaceState({ view: 'home' }, '', '#home');
+                history.replaceState({ view: 'home' }, '', window.location.pathname);
             }
         });
     </script>
