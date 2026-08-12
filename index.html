@@ -84,7 +84,8 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem 3rem; padding-top: 0.5rem; }
+        /* 수정된 부분: gap 크기를 줄여 카드 사이 간격을 좁혔습니다. */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem 1.5rem; padding-top: 0.5rem; }
         .grid-item { display: flex; flex-direction: column; opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .grid-item.visible { opacity: 1; transform: translateY(0); }
         .grid-img { width: 100%; aspect-ratio: 16 / 9; height: auto; background-color: #e0ded5; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; }
@@ -119,7 +120,8 @@
 
         /* ================= 반응형 (모바일 햄버거 메뉴 포함) ================= */
         @media (max-width: 1024px) { 
-            .main-content { padding: 0 0 4rem 3rem; } .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 2rem; }
+            /* 수정된 부분: 반응형 구간에서도 gap 크기를 줄였습니다. */
+            .main-content { padding: 0 0 4rem 3rem; } .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
         }
         @media (max-width: 768px) {
             .hamburger-btn { display: block; }
