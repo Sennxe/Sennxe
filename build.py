@@ -3,7 +3,6 @@ import json
 
 def get_folder_data(base_dir):
     data = {}
-    # 폴더가 없으면 자동으로 만들어줍니다
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
         return data
@@ -21,6 +20,7 @@ def get_folder_data(base_dir):
                     youtube_link = f.read().strip()
             
             for file_name in sorted(os.listdir(folder_path)):
+                # 이미지 파일만 골라냅니다
                 if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
                     img_path = f"{base_dir}/{folder_name}/{file_name}"
                     images.append(img_path)
@@ -35,7 +35,7 @@ def get_folder_data(base_dir):
 
 print("삐뽀! 폴더들을 스캔하는 중입니다...")
 
-motorsports_data = get_folder_data('MotorSports')
+motorsports_data = get_folder_data('Motorsports')
 portfolio_data = get_folder_data('Portfolio')
 
 js_content = f"const motorSportsData = {json.dumps(motorsports_data, ensure_ascii=False, indent=4)};\n"
