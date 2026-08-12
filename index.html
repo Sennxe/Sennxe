@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
+    <!-- 파이썬이 만들어준 진짜 데이터를 불러옵니다 -->
     <script src="data.js"></script>
 
     <style>
@@ -88,7 +89,7 @@
         
         .project-content { display: flex; flex-direction: column; gap: 2rem; width: 100%; padding-top: 0.5rem; }
         .project-content img { width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .project-content img:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); cursor: zoom-in; }
+        .project-content img:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
         .youtube-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .youtube-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -191,7 +192,7 @@
                 </div>
 
                 <div class="nav-accordion" id="portfolio-accordion">
-                    <button class="sidebar-link interactable" id="portfolio-tab-btn" onclick="togglePortfolioAccordion(this)">
+                    <button class="sidebar-link interactable" id="portfolio-tab-btn" onclick="toggleAccordion('portfolio')">
                         <span>Portfolio</span>
                         <span class="nav-arrow">▼</span>
                     </button>
@@ -271,7 +272,6 @@
 
     <script>
         let allProjectData = {};
-        const cursorDot = document.getElementById('cursor-dot');
 
         function copyEmail(event) { event.preventDefault(); navigator.clipboard.writeText("sennxe@gmail.com").then(() => { alert("이메일 주소가 복사되었습니다: sennxe@gmail.com"); }); }
         
@@ -279,6 +279,7 @@
         window.addEventListener('scroll', () => { if (window.scrollY > 300) { topBtn.classList.add("visible"); } else { topBtn.classList.remove("visible"); } });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
+        const cursorDot = document.getElementById('cursor-dot');
         window.addEventListener('mousemove', (e) => { cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px'; });
         document.querySelectorAll('.interactable, a, button, .tools-marquee-container').forEach((el) => {
             el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
@@ -335,7 +336,10 @@
                 };
 
                 gridContainer.appendChild(createArticle());
-                if (count >= total - 6) { homeGridContainer.appendChild(createArticle()); }
+
+                if (count >= total - 6) {
+                    homeGridContainer.appendChild(createArticle());
+                }
                 count++;
             });
 
@@ -361,7 +365,9 @@
             const accordion = document.getElementById(`${categoryId}-accordion`);
             const isOpen = accordion.classList.contains('open');
             document.querySelectorAll('.nav-accordion').forEach(acc => acc.classList.remove('open'));
+            
             if(!isOpen) { accordion.classList.add('open'); }
+            
             const btn = document.getElementById(`${categoryId}-tab-btn`);
             switchTab(categoryId, btn, true);
         }
@@ -377,19 +383,21 @@
             const lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = src;
             lightbox.classList.add('active');
-            cursorDot.style.display = 'none'; // 💡 라이트박스 켤 때 커서 숨김
             history.pushState({ view: 'lightbox' }, '', '#lightbox');
         }
 
         function closeLightbox(e) {
             if(e) e.stopPropagation();
             const lightbox = document.getElementById('lightbox');
-            if(lightbox.classList.contains('active')) { history.back(); }
+            if(lightbox.classList.contains('active')) {
+                history.back(); 
+            }
         }
 
         function openProject(projectId, categoryId, clickedSubmenuBtn, isHistoryBack = false) {
             const container = document.getElementById('project-image-container');
             const currentData = allProjectData[projectId]; 
+            
             container.innerHTML = ''; 
             
             if (currentData.youtube) {
@@ -397,11 +405,13 @@
                 if (ytId) {
                     const iframeWrapper = document.createElement('div');
                     iframeWrapper.className = 'youtube-wrapper interactable';
+                    
                     const iframe = document.createElement('iframe');
                     iframe.src = `https://www.youtube.com/embed/${ytId}`;
                     iframe.frameBorder = "0";
                     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                     iframe.allowFullscreen = true;
+                    
                     iframeWrapper.appendChild(iframe);
                     addCursorHover(iframeWrapper);
                     container.appendChild(iframeWrapper);
@@ -420,6 +430,7 @@
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
             document.getElementById('view-project').classList.add('active');
             document.getElementById('main-page-title').innerText = currentData.title;
+            
             const backBtn = document.getElementById('back-btn');
             backBtn.style.display = 'inline-flex';
             backBtn.innerText = `— Back to ${categoryId === 'motorsports' ? 'Motor Sports' : 'Portfolio'}`;
@@ -427,12 +438,15 @@
 
             document.querySelectorAll('.sidebar-link, .submenu-link').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`${categoryId}-tab-btn`).classList.add('active'); 
+            
             document.querySelectorAll('.nav-accordion').forEach(acc => acc.classList.remove('open'));
             document.getElementById(`${categoryId}-accordion`).classList.add('open');
+            
             if(clickedSubmenuBtn) clickedSubmenuBtn.classList.add('active');
             
             if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             if(!isHistoryBack) { history.pushState({ view: 'project', id: projectId, cat: categoryId }, '', '#' + projectId); }
+            
             scrollToTop();
         }
 
@@ -441,10 +455,14 @@
         function switchTab(tabId, clickedBtn, skipAccordionState = false, isHistoryBack = false) {
             document.querySelectorAll('.sidebar-link, .submenu-link').forEach(btn => btn.classList.remove('active'));
             if(clickedBtn) clickedBtn.classList.add('active');
+            
             if(!skipAccordionState) {
                 document.querySelectorAll('.nav-accordion').forEach(acc => acc.classList.remove('open'));
-                if (tabId === 'motorsports' || tabId === 'portfolio') { document.getElementById(`${tabId}-accordion`).classList.add('open'); }
+                if (tabId === 'motorsports' || tabId === 'portfolio') {
+                    document.getElementById(`${tabId}-accordion`).classList.add('open');
+                }
             }
+
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
             document.getElementById('view-' + tabId).classList.add('active');
             
@@ -455,9 +473,15 @@
             document.getElementById('main-page-title').innerText = titleText;
             
             const backBtn = document.getElementById('back-btn');
-            if(tabId === 'home') { backBtn.style.display = 'none'; } 
-            else if (tabId !== 'cv') { backBtn.style.display = 'inline-flex'; backBtn.innerText = '— Back to Home'; backBtn.onclick = goBackToHome; } 
-            else { backBtn.style.display = 'none'; }
+            if(tabId === 'home') {
+                backBtn.style.display = 'none';
+            } else if (tabId !== 'cv') {
+                backBtn.style.display = 'inline-flex';
+                backBtn.innerText = '— Back to Home';
+                backBtn.onclick = goBackToHome;
+            } else {
+                backBtn.style.display = 'none'; 
+            }
             
             if(tabId === 'home' || tabId === 'motorsports' || tabId === 'portfolio') {
                 const items = document.querySelectorAll('.grid-item');
@@ -465,15 +489,24 @@
                 setTimeout(initObserver, 50);
             }
             
+            // 💡 수정됨: #home 해시태그 원천 차단!
             if(!isHistoryBack) { 
-                if (tabId === 'home') { history.pushState({ view: 'home' }, '', window.location.pathname); }
-                else { history.pushState({ view: tabId }, '', '#' + tabId); }
+                if (tabId === 'home') {
+                    history.pushState({ view: 'home' }, '', window.location.pathname);
+                } else {
+                    history.pushState({ view: tabId }, '', '#' + tabId); 
+                }
             }
+            
             if (window.innerWidth <= 768) { toggleMobileMenu(true); }
             scrollToTop();
         }
 
-        function goHome(event) { event.preventDefault(); switchTab('home', null); if (window.innerWidth <= 768) { toggleMobileMenu(true); } }
+        function goHome(event) {
+            event.preventDefault(); 
+            switchTab('home', null);
+            if (window.innerWidth <= 768) { toggleMobileMenu(true); }
+        }
 
         let observer;
         function initObserver() {
@@ -494,25 +527,34 @@
 
         window.addEventListener('popstate', (event) => {
             const state = event.state;
+            
             const lightbox = document.getElementById('lightbox');
             const wasLightboxOpen = lightbox.classList.contains('active');
-            if (wasLightboxOpen) { lightbox.classList.remove('active'); cursorDot.style.display = 'block'; } // 💡 라이트박스 닫힐 때 커서 복구
+            if (wasLightboxOpen) { lightbox.classList.remove('active'); }
 
             if (state) {
                 if (state.view === 'lightbox') {
                     lightbox.classList.add('active');
-                    cursorDot.style.display = 'none';
                 } else if (state.view === 'project') {
-                    if (wasLightboxOpen && document.getElementById('view-project').classList.contains('active')) return;
+                    if (wasLightboxOpen && document.getElementById('view-project').classList.contains('active')) {
+                        return; 
+                    }
                     const btn = document.getElementById('submenu-btn-' + state.id);
                     openProject(state.id, state.cat, btn, true);
-                } else if (state.view === 'home') { switchTab('home', null, false, true); } 
-                else { const btn = document.getElementById(state.view + '-tab-btn'); switchTab(state.view, btn, false, true); }
-            } else { switchTab('home', null, false, true); }
+                } else if (state.view === 'home') {
+                    switchTab('home', null, false, true); 
+                } else {
+                    const btn = document.getElementById(state.view + '-tab-btn');
+                    switchTab(state.view, btn, false, true); 
+                }
+            } else {
+                switchTab('home', null, false, true);
+            }
         });
 
         document.addEventListener("DOMContentLoaded", () => {
             loadLocalProjects(); 
+            
             const hash = window.location.hash.replace('#', '');
             if (['cv', 'motorsports', 'portfolio'].includes(hash)) {
                 switchTab(hash, document.getElementById(`${hash}-tab-btn`), false, true);
@@ -522,6 +564,7 @@
                 openProject(hash, cat, document.getElementById('submenu-btn-' + hash), true);
                 history.replaceState({ view: 'project', id: hash, cat: cat }, '', '#' + hash);
             } else {
+                // 💡 수정됨: 최초 접속 시 주소창을 깔끔하게 유지합니다.
                 switchTab('home', null, false, true);
                 history.replaceState({ view: 'home' }, '', window.location.pathname);
             }
