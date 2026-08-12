@@ -30,7 +30,7 @@ const portfolioData = {
             "Portfolio/02_Dahlia/Dahlia_KimChae-yeon4.png",
             "Portfolio/02_Dahlia/Dahlia_KimChae-yeon5.png"
         ],
-        "youtube": "https://www.youtube.com/watch?v=ZX4gPeALiGs&list=PLcl_lgdUTOv4&index=2"
+        "youtube": "https://www.youtube.com/shorts/wAIwBMrVG5Y"
     },
     "03_Wriothesley": {
         "title": "Wriothesley",
