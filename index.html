@@ -20,7 +20,8 @@
         body { background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; overflow-y: scroll; line-height: 1.6; padding-top: 40px; }
         body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: none !important; }
         ::selection { background-color: #aec5e8; color: #1a1a1a; }
-        .cursor-dot { position: fixed; top: 0; left: 0; width: 16px; height: 16px; background-color: #aec5e8; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); mix-blend-mode: difference; transition: width 0.2s ease, height 0.2s ease; }
+        /* z-index를 99999로 수정하여 라이트박스(10000)보다 항상 위에 있도록 변경했습니다 */
+        .cursor-dot { position: fixed; top: 0; left: 0; width: 16px; height: 16px; background-color: #aec5e8; border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); mix-blend-mode: difference; transition: width 0.2s ease, height 0.2s ease; }
         .cursor-dot.hovered { width: 45px; height: 45px; }
         @media (pointer: coarse) { .cursor-dot { display: none; } body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: auto !important; } }
         
