@@ -8,29 +8,29 @@ const motorSportsData = {
     }
 };
 const portfolioData = {
-    "01_Sorai Saki": {
-        "title": "Sorai Saki",
-        "images": [
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon0.png",
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon1.png",
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon2.png",
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon3.png",
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon4.png",
-            "Portfolio/01_Sorai Saki/Saki_KimChae-yeon5.png"
-        ],
-        "youtube": ""
-    },
-    "02_Dahlia": {
+    "01_Dahlia": {
         "title": "Dahlia",
         "images": [
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon0.png",
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon1.png",
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon2.png",
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon3.png",
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon4.png",
-            "Portfolio/02_Dahlia/Dahlia_KimChae-yeon5.png"
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon0.png",
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon1.png",
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon2.png",
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon3.png",
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon4.png",
+            "Portfolio/01_Dahlia/Dahlia_KimChae-yeon5.png"
         ],
-        "youtube": "https://www.youtube.com/shorts/wAIwBMrVG5Y"
+        "youtube": "https://www.youtube.com/watch?v=wAIwBMrVG5Y&list=PLcl_lgdUTOv4&index=2"
+    },
+    "02_Sorai Saki": {
+        "title": "Sorai Saki",
+        "images": [
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon0.png",
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon1.png",
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon2.png",
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon3.png",
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon4.png",
+            "Portfolio/02_Sorai Saki/Saki_KimChae-yeon5.png"
+        ],
+        "youtube": ""
     },
     "03_Wriothesley": {
         "title": "Wriothesley",
