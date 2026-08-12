@@ -1,4 +1,12 @@
-const motorSportsData = {};
+const motorSportsData = {
+    "01_McLaren F1 Wheel Cover & Pirelli Tire": {
+        "title": "McLaren F1 Wheel Cover & Pirelli Tire",
+        "images": [
+            "Motor Sports/01_McLaren F1 Wheel Cover & Pirelli Tire/F1Wheel_Kimchae-yeon.png"
+        ],
+        "youtube": ""
+    }
+};
 const portfolioData = {
     "01_Sorai Saki": {
         "title": "Sorai Saki",

@@ -35,8 +35,8 @@ def get_folder_data(base_dir):
 
 print("삐뽀! 폴더들을 스캔하는 중입니다...")
 
-# 💡 두 폴더를 각각 스캔해서 데이터를 만듭니다.
-motorsports_data = get_folder_data('MotorSports')
+# 💡 센 님의 요청대로 띄어쓰기가 들어간 'Motor Sports' 로 수정완료!
+motorsports_data = get_folder_data('Motor Sports')
 portfolio_data = get_folder_data('Portfolio')
 
 js_content = f"const motorSportsData = {json.dumps(motorsports_data, ensure_ascii=False, indent=4)};\n"
