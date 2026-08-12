@@ -18,12 +18,7 @@
         .sns-link:hover .sns-custom-icon { filter: opacity(0.7); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comfortaa', 'Noto Sans KR', sans-serif; }
         body { background-color: #f6f5ef; color: #1a1a1a; overflow-x: hidden; overflow-y: scroll; line-height: 1.6; padding-top: 40px; }
-        body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: none !important; }
         ::selection { background-color: #aec5e8; color: #1a1a1a; }
-        /* z-index를 99999로 수정하여 라이트박스(10000)보다 항상 위에 있도록 변경했습니다 */
-        .cursor-dot { position: fixed; top: 0; left: 0; width: 16px; height: 16px; background-color: #aec5e8; border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); mix-blend-mode: difference; transition: width 0.2s ease, height 0.2s ease; }
-        .cursor-dot.hovered { width: 45px; height: 45px; }
-        @media (pointer: coarse) { .cursor-dot { display: none; } body, a, button, .sidebar-link, .submenu-link, .grid-item { cursor: auto !important; } }
         
         :root { --brand-color: #aec5e8; --brand-color-light: #e8f0f8; --text-dark: #1a1a1a; --text-gray: #666; --border-color: #dcdace; }
         
@@ -146,7 +141,6 @@
 </head>
 <body>
 
-    <div class="cursor-dot" id="cursor-dot"></div>
     <button id="scrollTopBtn" class="scroll-top-btn interactable" onclick="scrollToTop()">↑</button>
 
     <div id="lightbox" class="lightbox interactable" onclick="closeLightbox(event)">
@@ -280,17 +274,6 @@
         window.addEventListener('scroll', () => { if (window.scrollY > 300) { topBtn.classList.add("visible"); } else { topBtn.classList.remove("visible"); } });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-        const cursorDot = document.getElementById('cursor-dot');
-        window.addEventListener('mousemove', (e) => { cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px'; });
-        document.querySelectorAll('.interactable, a, button, .tools-marquee-container').forEach((el) => {
-            el.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
-        });
-        function addCursorHover(element) {
-            element.addEventListener('mouseenter', () => cursorDot.classList.add('hovered'));
-            element.addEventListener('mouseleave', () => cursorDot.classList.remove('hovered'));
-        }
-
         function toggleMobileMenu(forceClose = false) {
             const sidebar = document.querySelector('.sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -324,14 +307,12 @@
                 btn.id = 'submenu-btn-' + key;
                 btn.innerText = cleanTitle;
                 btn.onclick = (e) => { e.stopPropagation(); openProject(key, categoryId, btn); };
-                addCursorHover(btn);
                 submenuContainer.appendChild(btn);
                 
                 const createArticle = () => {
                     const article = document.createElement('article');
                     article.className = 'grid-item interactable';
                     article.onclick = () => openProject(key, categoryId, btn);
-                    addCursorHover(article);
                     article.innerHTML = `<div class="grid-img"><img src="${mainImage}" alt="${cleanTitle}"></div><h3 class="grid-title">${cleanTitle}</h3>`;
                     return article;
                 };
@@ -414,7 +395,6 @@
                     iframe.allowFullscreen = true;
                     
                     iframeWrapper.appendChild(iframe);
-                    addCursorHover(iframeWrapper);
                     container.appendChild(iframeWrapper);
                 }
             }
@@ -424,7 +404,6 @@
                 img.src = src;
                 img.classList.add('interactable');
                 img.onclick = () => openLightbox(src);
-                addCursorHover(img);
                 container.appendChild(img);
             });
 
@@ -490,7 +469,6 @@
                 setTimeout(initObserver, 50);
             }
             
-            // 💡 수정됨: #home 해시태그 원천 차단!
             if(!isHistoryBack) { 
                 if (tabId === 'home') {
                     history.pushState({ view: 'home' }, '', window.location.pathname);
@@ -565,7 +543,6 @@
                 openProject(hash, cat, document.getElementById('submenu-btn-' + hash), true);
                 history.replaceState({ view: 'project', id: hash, cat: cat }, '', '#' + hash);
             } else {
-                // 💡 수정됨: 최초 접속 시 주소창을 깔끔하게 유지합니다.
                 switchTab('home', null, false, true);
                 history.replaceState({ view: 'home' }, '', window.location.pathname);
             }
