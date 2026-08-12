@@ -1,8 +1,8 @@
 const motorSportsData = {
-    "01_McLaren F1 Wheel Cover & Pirelli Tire": {
-        "title": "McLaren F1 Wheel Cover & Pirelli Tire",
+    "01_McLaren F1 Wheel Cover & Pirelli Tyre": {
+        "title": "McLaren F1 Wheel Cover & Pirelli Tyre",
         "images": [
-            "Motorsports/01_McLaren F1 Wheel Cover & Pirelli Tire/F1Wheel_Kimchae-yeon.png"
+            "Motorsports/01_McLaren F1 Wheel Cover & Pirelli Tyre/F1Wheel_Kimchae-yeon.png"
         ],
         "youtube": ""
     }
